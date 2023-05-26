@@ -135,4 +135,3 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_REDIRECT_URL = '/reservation/'
-LOGOUT_REDIRECT_URL = '/reservation/'

@@ -13,6 +13,10 @@ def index(request):
     context = {"hello": "world"}
     return render(request, "index.html", context)
 
+def logout(request):
+    template = loader.get_template("index.html")
+    return render(request, "logout.html", None)
+
 class SignupView(CreateView):
     form_class = UserCreationForm
     template_name = 'signup.html'
