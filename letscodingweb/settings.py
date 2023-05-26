@@ -133,3 +133,6 @@ STATIC_URL = '/static/'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+LOGIN_REDIRECT_URL = '/reservation/'
+LOGOUT_REDIRECT_URL = '/reservation/'
