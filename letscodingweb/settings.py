@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-n__*8fzyac%pt2dpi_2yezyjk_ckporghm18e-2rh37_ahw!yp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.letscoding.club']
+ALLOWED_HOSTS = ['www.letscoding.club', '127.0.0.1']
 
 
 # Application definition
@@ -129,3 +129,7 @@ MEDIA_ROOT = '/home/turboguy36/letscodingweb/media'
 MEDIA_URL = '/media/'
 STATIC_ROOT = '/home/turboguy36/letscodingweb/static'
 STATIC_URL = '/static/'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
