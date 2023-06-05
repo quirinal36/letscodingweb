@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="/reservation/regist/" method="post">
+    {% csrf_token %}
+    {{boardForm}}
+    <input type="submit">
+</form>
+{% endblock %}
