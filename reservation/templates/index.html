@@ -9,12 +9,12 @@
         <p>You are not logged in</p>
     {%endif%}
 
-    <a href="{% url 'regist' %}">글쓰기</a>
+    <a href="{% url 'reservations:regist' %}">글쓰기</a>
 
     <ol>
         {% for item in board_list %}
             <li>
-                <a href="/reservation/read/{{item.id}}"/>
+                <a href="{% url 'reservations:read' item.id %}"/>
                     {{ item.title }}
                 </a>
             </li>

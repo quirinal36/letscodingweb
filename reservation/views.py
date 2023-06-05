@@ -8,8 +8,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from .forms import BoardForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods, require_POST
 from .models import Board
-# Create your views here.
+
 def index(request):
     board_list = Board.objects.order_by("id")
     context = {"board_list": board_list}
@@ -33,7 +34,9 @@ class SignupView(CreateView):
         login(self.request, user)
         return HttpResponseRedirect(reverse('index'))
     
+
 @login_required(login_url='/reservation/login/')
+@require_http_methods({"GET", "POST"})
 def register(request):
     if request.method == "GET":
         
@@ -67,3 +70,30 @@ def read(request, board_id):
         "board": board,
         "error_message":"You didn't select a choice."
     })
+
+@login_required(login_url="/reservation/login")
+@require_http_methods({"GET", "POST"})
+def update(request, board_id):
+    board = get_object_or_404(Board, pk=board_id)
+    if request.method == "GET" :
+        board = Board.objects.get(id=board_id)
+        boardForm = BoardForm(instance=board)
+        context = {'boardForm': boardForm}
+        return render(request, 'boardWrite.html', context)
+    elif request.method == "POST":
+        boardForm = BoardForm(request.POST, instance = board)
+        
+        if boardForm.is_valid():
+            board = boardForm.save(commit=False)
+            print(board)
+            board.save()
+            
+        return redirect('/reservation/read/'+str(board.id))
+    
+@login_required(login_url="/reservation/login")
+def delete(request, board_id):
+    board = Board.objects.get(id = board_id)
+    if request.user != board.user:
+        return redirect("/reservation/")
+    board.delete()
+    return redirect("reservation/")
