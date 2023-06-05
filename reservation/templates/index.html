@@ -10,4 +10,14 @@
     {%endif%}
 
     <a href="{% url 'regist' %}">글쓰기</a>
+
+    <ol>
+        {% for item in board_list %}
+            <li>
+                <a href="/reservation/read/{{item.id}}"/>
+                    {{ item.title }}
+                </a>
+            </li>
+        {% endfor %}
+    </ol>
 {% endblock %}

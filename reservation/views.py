@@ -11,7 +11,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Board
 # Create your views here.
 def index(request):
-    context = {"hello": "world"}
+    board_list = Board.objects.order_by("id")
+    context = {"board_list": board_list}
     return render(request, "index.html", context)
 
 def logout(request):
