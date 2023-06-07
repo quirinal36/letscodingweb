@@ -4,8 +4,9 @@
     
     <p>{{ board.title }}</p>
     <p>{{ board.contents }}</p>
-    <p>{{ user.username }}</p>
-
-    <a href="{% url 'reservations:update' board.id %}"/>수정</a>
-    <a href="{% url 'reservations:delete' board.id %}"/>삭제</a>
+    <p>{{ board.user.username }}</p>
+    {% if board.user.id == user.id %}
+        <a href="{% url 'reservations:update' board.id %}"/>수정</a>
+        <a href="{% url 'reservations:delete' board.id %}"/>삭제</a>
+    {% endif %}
 {% endblock %}
