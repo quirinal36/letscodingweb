@@ -141,8 +141,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_POST = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get("GOOGLE_USERNAME")
-EMAIL_HOST_PASSWORD = os.environ.get("GOOGLE_PASSWORD")
-EMAIL_FROM = os.environ.get("GOOGLE_FROM")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_FROM = os.environ.get("RECIPIENT_ADDRESS")
 
 AUTH_USER_MODEL = "reservation.User"
