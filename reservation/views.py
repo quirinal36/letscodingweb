@@ -4,7 +4,6 @@ from django.template import loader
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, FormView
-#from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from .forms import BoardForm, SignUpForm
 from django.contrib.auth.decorators import login_required
