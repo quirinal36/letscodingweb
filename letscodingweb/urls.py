@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+import reservation.views
 urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')), 
     path('reservation/', include('reservation.urls')),
     path('admin/', admin.site.urls),
+    path('', reservation.views.index), # welcome page setting
 ]
