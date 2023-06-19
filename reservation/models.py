@@ -22,8 +22,10 @@ class User(AbstractUser):
     
     birthdate = models.DateField(null=True)
     """
+    name = models.CharField(max_length=120, default="", blank=True)
     email_verified = models.BooleanField(default=False)  # 👈 인증여부(True, False)
     email_secret = models.CharField(max_length=120, default="", blank=True)  # 👈 uuid를 사용하여 난수 임시 저장
+    school = models.CharField(max_length=120, default="", blank=True)
     def verify_email(self): # 👈 회원가입 시, email을 인증을 위한 매서드입니다.
         if self.email_verified is False:
             secret = uuid.uuid4().hex[:20] # 👈 random key 생성

@@ -1,112 +1,71 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>용인형 공유학교</title>
-    <script src="/js/jquery-1.12.1.min.js"></script>
-    <script src="/js/common.js"></script>
-    <script src="/js/index.js"></script>
-    <link rel="stylesheet" href="/css/css.css">
-
-    <!-- meta -->
-    <meta name="Title" content="용인형 공유학교">
-    <meta name="Description" content="우리지역의 시설과 전문가를 공유하다.">
-    <meta name="Keywords" content="용인, 시설, 전문가">
-    <meta name="Author" content="">
-
-    <!-- twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@WEBSITE">
-    <meta name="twitter:title" content="용인형 공유학교">
-    <meta name="twitter:description" content="우리지역의 시설과 전문가를 공유하다.">
-    <meta name="twitter:url" content="">
-    <meta name="twitter:image" content="/img/og.jpg">
-
-    <!-- opengraph -->
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="용인형 공유학교">
-    <meta property="og:title" content="용인형 공유학교">
-    <meta property="og:description" content="우리지역의 시설과 전문가를 공유하다.">
-    <meta property="og:image" content="/img/og.jpg">
-    <meta property="og:url" content="">
-</head>
-<body>
-    <div id="wrap">
-        <header>
-            <div id="headerWrap"></div>
-        </header>
-        <div id="containerWrap">
-            <div class="title-style1">
-                <div class="layout-center">
-                    <strong>회원가입</strong>
-                </div>
-            </div>
+{% extends 'base.html' %}
+{% block content %}
+    <div id="containerWrap">
+        <div class="title-style1">
             <div class="layout-center">
-                <!-- 회원가입 -->
-                <div class="form-style1">
-                    <form>
-                        <div class="box">
-                            <dl>
-                                <dt>이름 *</dt>
-                                <dd>
-                                    <input type="text" placeholder="이름 입력" class="ipt1">
-                                    <p class="guide">이름을 입력하세요.</p>
-                                </dd>
-                            </dl>
-                            <dl>
-                                <dt>이메일 주소 *</dt>
-                                <dd>
-                                    <input type="text" placeholder="이메일 주소 입력" class="ipt1">
-                                    <p class="guide">이메일 주소를 입력하세요.</p>
-                                </dd>
-                            </dl>
-                            <dl>
-                                <dt>비밀번호 *</dt>
-                                <dd>
-                                    <input type="password" placeholder="비밀번호 입력" class="ipt1">
-                                    <p class="guide">비밀번호를 입력하세요.</p>
-                                </dd>
-                            </dl>
-                            <dl>
-                                <dt>비밀번호 확인 *</dt>
-                                <dd>
-                                    <input type="password" placeholder="비밀번호 입력" class="ipt1">
-                                    <p class="guide">비밀번호가 일치하지 않습니다.</p>
-                                </dd>
-                            </dl>
-                            <dl>
-                                <dt>학교명</dt>
-                                <dd>
-                                    <input type="text" placeholder="학교명 입력" class="ipt1">
-                                </dd>
-                            </dl>
-                            <dl>
-                                <dt>개인정보처리방침 *</dt>
-                                <dd>
-                                    <div class="text-box">
-                                        <textarea>개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침</textarea>
-                                    </div>
-                                    <div class="agree-line">
-                                        <input id="agree" type="checkbox">
-                                        <label for="agree">동의합니다.</label>
-                                    </div>
-                                    <p class="guide">개인정보처리방침에 동의해주세요.</p>
-                                </dd>
-                            </dl>
-                        </div>
-                        <div class="bt-wrap">
-                            <input type="submit" value="회원가입" class="bt1 on">
-                            <a href="/" class="bt1">취소</a>
-                        </div>
-                    </form>
-                </div>
+                <strong>회원가입</strong>
             </div>
         </div>
-        <footer>
-            <div id="footerWrap"></div>
-        </footer>
+        <div class="layout-center">
+            <!-- 회원가입 -->
+            <div class="form-style1">
+                <form>
+                    {% csrf_token %}
+                    <div class="box">
+                        <dl>
+                            <dt>이름 *</dt>
+                            <dd>
+                                <input type="text" placeholder="이름 입력" class="ipt1">
+                                <p class="guide">이름을 입력하세요.</p>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>이메일 주소 *</dt>
+                            <dd>
+                                <input type="text" placeholder="이메일 주소 입력" class="ipt1">
+                                <p class="guide">이메일 주소를 입력하세요.</p>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>비밀번호 *</dt>
+                            <dd>
+                                <input type="password" placeholder="비밀번호 입력" class="ipt1">
+                                <p class="guide">비밀번호를 입력하세요.</p>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>비밀번호 확인 *</dt>
+                            <dd>
+                                <input type="password" placeholder="비밀번호 입력" class="ipt1">
+                                <p class="guide">비밀번호가 일치하지 않습니다.</p>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>학교명</dt>
+                            <dd>
+                                <input type="text" placeholder="학교명 입력" class="ipt1">
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>개인정보처리방침 *</dt>
+                            <dd>
+                                <div class="text-box">
+                                    <textarea>개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침</textarea>
+                                </div>
+                                <div class="agree-line">
+                                    <input id="agree" type="checkbox">
+                                    <label for="agree">동의합니다.</label>
+                                </div>
+                                <p class="guide">개인정보처리방침에 동의해주세요.</p>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="bt-wrap">
+                        <input type="submit" value="회원가입" class="bt1 on">
+                        <a href="/" class="bt1">취소</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+{% endblock %}

@@ -41,7 +41,7 @@ class LoginView(FormView):
 
 class SignupView(FormView):
     form_class = SignUpForm
-    template_name = 'signup.html'
+    template_name = 'member/join.html'
     success_url = reverse_lazy('reservations:index')
     model = User
 
