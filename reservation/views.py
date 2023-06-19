@@ -9,7 +9,7 @@ from .forms import BoardForm, SignUpForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_POST
 from .models import Board, User, Event
-from djreservation.views import ProductReservationView
+
 
 def block(request):
     return render(request, "blockly.html", None)
@@ -109,10 +109,6 @@ def delete(request, board_id):
     return redirect("reservation/")
 
 
-class MyObjectReservation(ProductReservationView):
-    base_model = Event
-    amount_field = 'quantity'
-    extra_display_field = {'measurement_unit'}
     
 def calendar(request):
     return render(request, "program/calendar.html", None)

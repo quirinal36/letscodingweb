@@ -3,8 +3,7 @@ from django.contrib.auth import views as auth_views
 
 from . import views
 from .views import SignupView
-from .views import MyObjectReservation
-from djreservation import urls as djreservation_urls
+
 app_name="reservations"
 
 urlpatterns = [
@@ -19,8 +18,7 @@ urlpatterns = [
     path("verify/<str:key>", views.complete_verification, name="complete-verification"), #인증 메일 내 링크가 클릭되면 "complete_verification" 함수가 작동합니다:)
     path("block/", views.block, name="block"),
     path("calendar/", views.calendar, name="calendar"),
-    path("create/", MyObjectReservation.as_view()),
     path("applyList/", views.applyList, name="applyList"),
 ]
-urlpatterns += djreservation_urls.urlpatterns
+
 
