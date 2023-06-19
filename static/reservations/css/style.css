@@ -1,0 +1,361 @@
+#wrap {
+    width: 100%;
+    min-width: 1200px;
+}
+
+#headerWrap {
+    position: relative;
+    height: 100px;
+    z-index: 3;
+}
+
+#headerWrap > div {
+
+}
+
+#headerWrap.sub > div {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+#headerWrap > div {
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ddd;
+}
+
+#headerWrap > div > div {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+#headerWrap .logo {
+    float: left;
+    padding-top: 28px;
+}
+
+#headerWrap .logo img {
+    height: 48px;
+}
+
+#headerWrap .logo .idx {
+    display: none;
+}
+
+#headerWrap .logo .sub {
+    display: inline-block;
+}
+
+#headerWrap.idx .logo .idx {
+    display: inline-block;
+}
+
+#headerWrap.idx .logo .sub {
+    display: none;
+}
+
+#navWrap.pc {
+    float: right;
+}
+
+#navWrap.pc .dep1 {
+    font-size: 0;
+}
+
+#navWrap.pc .dep1 > li {
+    display: inline-block;
+}
+
+#navWrap.pc .dep1 > li:first-child {
+    margin-left: 0;
+}
+
+#navWrap.pc .dep1 > li > a {
+    position: relative;
+    display: block;
+    height: 100px;
+    padding: 35px 20px 0 20px;
+    box-sizing: border-box;
+    font-size: 2rem;
+    font-weight: 500;
+    color: #333;
+    letter-spacing: -0.5px;
+}
+
+#navWrap.pc .dep1 > li:last-child > a {
+    padding-right: 0;
+}
+
+#headerWrap.idx #navWrap.pc .dep1 > li > a {
+    color: #000;
+}
+
+#headerWrap #navWrap.pc .dep1 > li.on {
+    background: url(/img/gnb-dot.png) no-repeat 50% 0 /16px;
+}
+
+#headerWrap #navWrap.pc .dep1 > li.on a {
+    color: #f43030;
+}
+
+#headerWrap #navWrap.pc .dep2 {
+    display: none;
+    position: absolute;
+    top: 99px;
+    left: 0;
+    width: 100%;
+    padding: 16px 0;
+    background: #f5f5f5;
+}
+
+#headerWrap #navWrap .dep1 li:first-child .dep2 > div {
+    padding-right: 434px;
+}
+
+#headerWrap #navWrap.pc .dep1 > li:hover ul.dep2 {
+    display: block;
+}
+
+#headerWrap #navWrap.pc .dep2 > div {
+    width: 1000px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    text-align: right;
+}
+
+
+#headerWrap #navWrap.pc .dep2 li {
+    display: inline-block;
+    margin-left: 26px;
+}
+
+
+#headerWrap #navWrap.pc .dep2 li:first-child {
+    margin-left: 0;
+}
+
+#headerWrap #navWrap.pc .dep2 a {
+    font-size: 1.6rem;
+}
+
+#navWrap.mobile {
+    display: none;
+}
+
+#footerWrap {
+    border-top: 1px solid #000;
+}
+
+#footer {
+    position: relative;
+    width: 1000px;
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+#footer li,
+#footer p {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1.6rem;
+}
+
+#footer li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+#footer p {
+    margin-top: 6px;
+}
+
+.footer-logo {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 300px;
+    margin-top: -25px;
+}
+
+#ctWrap {
+    width: 100%;
+    height: 210px;
+    padding-top: 80px;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: cover;
+}
+
+#ctWrap h2 {
+    line-height: 100%;
+    text-align: center;
+    font-size: 4rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    color: #fff;
+}
+
+.layout-center {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.title-style1 {
+    height: 160px;
+    padding-top: 48px;
+    box-sizing: border-box;
+    background: #000;
+}
+
+.title-style1 strong {
+    font-size: 3.6rem;
+    font-weight: 500;
+    color: #fff;
+}
+
+.calendar-wrap {
+    padding: 60px 0;
+}
+
+.calendar-wrap .top {
+    text-align: center;
+}
+
+.calendar-wrap .top select {
+    padding-right: 28px;
+    border-bottom: 4px solid #000;
+    font-size: 3rem;
+    font-weight: 600;
+    background: url('/static/reservations/img/calendar-down.png') no-repeat 100% 60% /20px;
+}
+
+.calendar-wrap .top select:first-child {
+    margin-right: 20px;
+}
+
+.calendar-wrap .table-wrap {
+    position: relative;
+    margin-top: 30px;
+}
+
+.calendar-wrap .table-wrap button {
+    position: absolute;
+    top: 50%;
+    margin-top: -20px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.calendar-wrap .table-wrap #bt-prev {
+    left: 0;
+}
+
+.calendar-wrap .table-wrap #bt-next {
+    right: 0;
+}
+
+.calendar-wrap .table-wrap button img {
+    width: 40px;
+}
+
+.calendar-wrap table {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.calendar-wrap table thead {
+    background: #f5f5f5;
+}
+
+.calendar-wrap table thead th {
+    padding: 12px 0;
+    text-align: center;
+    font-size: 1.6rem;
+}
+
+.calendar-wrap table tbody tr.date td {
+    padding: 10px;
+    font-size: 1.6rem;
+}
+
+.calendar-wrap table tbody tr.date td.sun,
+.calendar-wrap table tbody tr.date td.holiday {
+    color: #f43030;
+}
+
+.calendar-wrap table tbody tr.text {
+    border-bottom: 1px solid #ddd;
+}
+
+.calendar-wrap table tbody tr.text td a {
+    display: block;
+    margin-bottom: 10px;
+    padding: 0 0 5px 0;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 1.6rem;
+}
+
+.form-style1 {
+    margin: 60px auto;
+}
+
+.form-style1 .box {
+    width: 400px;
+    margin: 0 auto;
+    padding: 30px;
+    box-sizing: border-box;
+    box-shadow: 0 0 30px #d5d5d5;
+}
+
+.form-style1 .box dl {
+    margin-top: 20px;
+    font-size: 0;
+}
+
+.form-style1 .box dl:first-child {
+    margin-top: 0;
+}
+
+
+.form-style1 .box dt {
+    font-size: 1.6rem;
+}
+.form-style1 .box dd {
+    margin-top: 10px;
+    font-size: 1.6rem;
+}
+
+.form-style1 .box .guide {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    color: #f43030;
+}
+
+.form-style1 .text-box textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    box-sizing: border-box;
+    background: #f5f5f5;
+}
+
+.form-style1 .agree-line {
+    margin-top: 10px;
+}
+
+.form-style1 .agree-line input[type="checkbox"] {
+    -webkit-appearance: auto;
+    display: inline-block;
+    vertical-align: middle;
+    width: 15px;
+    height: 15px;
+}
+
+.form-style1 .agree-line label {
+    display: inline-block;
+    margin-left: 4px;
+    vertical-align: middle;
+    font-size: 1.4rem;
+}

@@ -31,8 +31,7 @@ class User(AbstractUser):
             html_message = render_to_string(
                 "emails/verify_email.html", {"secret": secret}
             )
-            print(html_message)
-            print(settings.EMAIL_FROM)
+            
             send_mail(
                 "Verify LetsCoding Account",  # 👈 제목
                 strip_tags(html_message),  # 👈 내용
@@ -49,5 +48,14 @@ class Board(models.Model) :
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     contents = models.TextField()
+    create_date =models.DateTimeField(auto_now_add=True)
+    
+class Event(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    start_date = models.DateField(auto_now=False, auto_now_add=False)
+    finish_date = models.DateField(auto_now=False, auto_now_add=False)
+    students = models.IntegerField("학생수", default = 1)
+    school = models.TextField()
+    grade = models.TextField("학년")
     create_date =models.DateTimeField(auto_now_add=True)
     

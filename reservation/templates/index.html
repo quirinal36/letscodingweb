@@ -1,23 +1,28 @@
 {% extends 'base.html' %}
-
+    {% load static %}
 {% block content %}
-    {% if user.is_authenticated and user.is_staff%}
-        <p>Hello, {{user.username}}. You are a staff</p>
-    {% elif user.is_authenticated %}
-        <p>Hello, {{user.username}}</p>
-    {% else %}
-        <p>You are not logged in</p>
-    {%endif%}
+    <div id="containerWrap">
+    {% comment "note" %}
+        {% if user.is_authenticated and user.is_staff%}
+            <p>Hello, {{user.username}}. You are a staff</p>
+        {% elif user.is_authenticated %}
+            <p>Hello, {{user.username}}</p>
+        {% else %}
+            <p>You are not logged in</p>
+        {%endif%}
 
-    <a href="{% url 'reservations:regist' %}">글쓰기</a>
+        <a href="{% url 'reservations:regist' %}">글쓰기</a>
 
-    <ol>
-        {% for item in board_list %}
-            <li>
-                <a href="{% url 'reservations:read' item.id %}"/>
-                    {{ item.title }}
-                </a>
-            </li>
-        {% endfor %}
-    </ol>
+        <ol>
+            {% for item in board_list %}
+                <li>
+                    <a href="{% url 'reservations:read' item.id %}"/>
+                        {{ item.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% endcomment %}
+        
+    </div>
 {% endblock %}

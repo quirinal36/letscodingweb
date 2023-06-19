@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <div id="containerWrap">
+        <div class="title-style1">
+            <div class="layout-center">
+                <strong>교육 신청내역</strong>
+            </div>
+        </div>
+        <div class="layout-center">
+            <div class="tbl-wrap scroll">
+                <div>
+                    <form>
+                        <table class="tbl1">
+                            <thead>
+                                <tr>
+                                    <th>회기</th>
+                                    <th>기간</th>
+                                    <th>신청인원</th>
+                                    <th>운영일수</th>
+                                    <th>운영형태</th>
+                                    <th>구분</th>
+                                    <th>확정 유/무</th>
+                                    <th>신청취소</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2023.04.10 ~ 2023.04.14</td>
+                                    <td>30명</td>
+                                    <td>5</td>
+                                    <td>무박형</td>
+                                    <td>[미래]섹션</td>
+                                    <td>미확정</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2023.05.08 ~ 2023.05.12</td>
+                                    <td>50명</td>
+                                    <td>5</td>
+                                    <td>무박형</td>
+                                    <td>[균형]섹션</td>
+                                    <td>확정</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2023.05.22 ~ 2023.05.26</td>
+                                    <td>50명</td>
+                                    <td>5</td>
+                                    <td>무박형</td>
+                                    <td>[미래]섹션</td>
+                                    <td>선정 중</td>
+                                    <td><input type="checkbox"></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>2023.05.22 ~ 2023.05.26</td>
+                                    <td>50명</td>
+                                    <td>5</td>
+                                    <td>무박형</td>
+                                    <td>[미래]섹션</td>
+                                    <td>취소</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+            <div class="bt-wrap">
+                <a href="#" onclick="javascript:alert('선택된 항목이 없습니다.');" class="bt1">신청 취소</a>
+            </div>
+        </div>
+    </div>    
+{% endblock %}    

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <div id="containerWrap">
+        <div id="containerWrap">
+            <div class="title-style1">
+                <div class="layout-center">
+                    <strong>교육 신청</strong>
+                </div>
+            </div>
+            <div class="layout-center">
+                <div class="calendar-wrap">
+                    <div class="top">
+                        <select name="" id="">
+                            <option value="">2023년</option>
+                            <option value="">2022년</option>
+                        </select>
+                        <select name="" id="">
+                            <option value="">5월</option>
+                            <option value="">4월</option>
+                            <option value="">3월</option>
+                            <option value="">2월</option>
+                            <option value="">1월</option>
+                        </select>
+                    </div>
+                    <div class="table-wrap">
+                        <button id="bt-prev"><img src="{% static 'reservations/img/calendar-prev.png' %}" alt="이전 달"></button>
+                        <button id="bt-next"><img src="{% static 'reservations/img/calendar-next.png' %}" alt="다음 달"></button>
+                        <table>
+                            <colgroup>
+                                <col width="15%">
+                                <col width="14%">
+                                <col width="14%">
+                                <col width="14%">
+                                <col width="14%">
+                                <col width="14%">
+                                <col width="15%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="sun">일</th>
+                                    <th>월</th>
+                                    <th>화</th>
+                                    <th>수</th>
+                                    <th>목</th>
+                                    <th>금</th>
+                                    <th>토</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="date">
+                                    <td class="sun"></td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td class="holiday">5</td>
+                                    <td>6</td>
+                                </tr>
+                                <tr class="text">
+                                    <td></td>
+                                    <td colspan="5">
+                                        <a href="/program/apply.html" style="background: rgb(255, 131, 203);">선정학교 - 공유 중</a>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr class="date">
+                                    <td class="sun">7</td>
+                                    <td>8</td>
+                                    <td>9</td>
+                                    <td>10</td>
+                                    <td>11</td>
+                                    <td>12</td>
+                                    <td>13</td>
+                                </tr>
+                                <tr class="text">
+                                    <td></td>
+                                    <td colspan="5">
+                                        <a href="#:;" style="background: #ddd;">신청마감</a>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr class="date">
+                                    <td class="sun">14</td>
+                                    <td>15</td>
+                                    <td>16</td>
+                                    <td>17</td>
+                                    <td>18</td>
+                                    <td>19</td>
+                                    <td>20</td>
+                                </tr>
+                                <tr class="text">
+                                    <td></td>
+                                    <td colspan="5">
+                                        <a href="/program/apply.html" style="background: rgb(247, 255, 131);">[균형] 섹션 접수중</a>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr class="date">
+                                    <td class="sun">21</td>
+                                    <td>22</td>
+                                    <td>23</td>
+                                    <td>24</td>
+                                    <td>25</td>
+                                    <td>26</td>
+                                    <td class="holiday">27</td>
+                                </tr>
+                                <tr class="text">
+                                    <td></td>
+                                    <td colspan="3">
+                                        <a href="/program/apply.html" style="background: rgb(117, 255, 209);">[미래] 섹션 접수중</a>
+                                    </td>
+                                    <td></td>
+                                    <td colspan="2">
+                                        <a href="/program/apply.html" style="background: rgb(131, 168, 255);">sample</a>
+                                    </td>
+                                </tr>
+                                <tr class="date">
+                                    <td class="sun">28</td>
+                                    <td>29</td>
+                                    <td>30</td>
+                                    <td>31</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr class="text">
+                                    <td colspan="3">
+                                        <a href="/program/apply.html" style="background: rgb(131, 168, 255);">sample</a>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>
+{% endblock %}

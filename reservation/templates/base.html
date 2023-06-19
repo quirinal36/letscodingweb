@@ -1,7 +1,39 @@
-<html>
+<html lang="ko">
     <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>용인형 공유학교</title>
+      {% load static %}
+      <script src="{% static 'reservations/js/jquery-1.12.1.min.js' %}"></script>
+      
+      
+      <link rel="stylesheet" href="{% static 'reservations/css/css.css'%} ">
+
+      <!-- meta -->
+      <meta name="Title" content="용인형 공유학교">
+      <meta name="Description" content="우리지역의 시설과 전문가를 공유하다.">
+      <meta name="Keywords" content="용인, 시설, 전문가">
+      <meta name="Author" content="">
+
+      <!-- twitter -->
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:site" content="@WEBSITE">
+      <meta name="twitter:title" content="용인형 공유학교">
+      <meta name="twitter:description" content="우리지역의 시설과 전문가를 공유하다.">
+      <meta name="twitter:url" content="">
+      <meta name="twitter:image" content="{% static 'reservations/img/og.jpg' %}">
+
+      <!-- opengraph -->
+      <meta property="og:type" content="website">
+      <meta property="og:site_name" content="용인형 공유학교">
+      <meta property="og:title" content="용인형 공유학교">
+      <meta property="og:description" content="우리지역의 시설과 전문가를 공유하다.">
+      <meta property="og:image" content="{% static 'reservations/img/og.jpg' %}">
+      <meta property="og:url" content="">
     </head>
     <body>
+        {% comment %}
         <ul class="nav justify-content-end">
             {% if user.is_active %}
             <li class="nav-item">
@@ -16,7 +48,20 @@
             </li>
             {% endif %}
         </ul>
-        {% block content %}
-        {% endblock %}
+        {% endcomment %}
+        <div id="wrap">
+          <header>
+            <div id="headerWrap">
+              {% include "inc/header.html" %}
+            </div>
+          </header>
+          {% block content %}
+          {% endblock %}
+          <footer>
+            <div id="footerWrap">
+              {% include "inc/footer.html" %}
+            </div>
+          </footer>
+        </div>
     </body>
 </html>

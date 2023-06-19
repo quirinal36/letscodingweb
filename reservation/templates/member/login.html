@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <div id="containerWrap">
+        <div class="title-style1">
+            <div class="layout-center">
+                <strong>로그인</strong>
+            </div>
+        </div>
+        <div class="layout-center">
+            <!-- 회원가입 -->
+            <div class="form-style1">
+                <form method="post" action="{% url 'reservations:login' %}">
+                    {% csrf_token %}
+                    <div class="box">
+                        <dl>
+                            <dt>이메일 주소</dt>
+                            <dd>
+                                {% comment %}
+                                <input type="text" placeholder="이메일 주소 입력" class="ipt1">
+                                {% endcomment %}
+                                {{ form.username }}
+                                <p class="guide">{{ form.username.label_tag }}</p>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>비밀번호</dt>
+                            <dd>
+                                {% comment %}
+                                <input type="password" placeholder="비밀번호 입력" class="ipt1">
+                                {% endcomment %}
+                                {{ form.password }}
+                                <p class="guide">{{ form.password.label_tag }}</p>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="bt-wrap">
+                        {% comment %}
+                        <a href="/program/apply-list.html" onclick="javascript:alert('일치하는 회원 정보를 찾을 수 없습니다.');" class="bt1 on">로그인</a>
+                        {% endcomment %}
+                        <input type="submit" value="login" class="bt1 on">
+                        <a href="#" onClick="history.back()" class="bt1">취소</a>
+                    </div>
+                    <input type="hidden" name="next" value="{{ next }}">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}    

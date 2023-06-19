@@ -1,7 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<div class="title-style1">
+    <div class="layout-center">
+        <strong>로그인</strong>
+    </div>
+</div>
+<div class="layout-center">
+    <!-- 회원가입 -->
+    <div class="form-style1">
+        <form>
+            <div class="box">
+                <dl>
+                    <dt>이메일 주소</dt>
+                    <dd>
+                        <input type="text" placeholder="이메일 주소 입력" class="ipt1">
+                        <p class="guide">이메일 주소를 입력하세요.</p>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>비밀번호</dt>
+                    <dd>
+                        <input type="password" placeholder="비밀번호 입력" class="ipt1">
+                        <p class="guide">비밀번호를 입력하세요.</p>
+                    </dd>
+                </dl>
+            </div>
+            <div class="bt-wrap">
+                <a href="/program/apply-list.html" onclick="javascript:alert('일치하는 회원 정보를 찾을 수 없습니다.');" class="bt1 on">로그인</a>
+                <a href="#" onClick="history.back()" class="bt1">취소</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% comment %}
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
@@ -15,7 +47,7 @@
     {% endif %}
 {% endif %}
 
-<form method="post" action="{% url 'login' %}">
+<form method="post" action="{% url 'reservations:login' %}">
 {% csrf_token %}
 <table>
 <tr>
@@ -34,5 +66,6 @@
 <p><a href="{% url 'reservations:signup' %}">회원가입</a></p>
 {# Assumes you set up the password_reset view in your URLconf #}
 <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+{% endcomment %}
 
 {% endblock %}

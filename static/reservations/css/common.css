@@ -1,0 +1,120 @@
+html.noScroll {
+    height: 100%;
+    overflow-y: hidden;
+}
+
+.bt-wrap {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.bt1 {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 12px 24px 14px 24px;
+    background: #fff;
+    border: 1px solid #333;
+    border-radius: 100px;
+    line-height: 100%;
+    text-align: center;
+    font-size: 1.6rem;
+    color: #333 !important;
+    cursor: pointer;
+}
+
+.bt1:first-child {
+    margin-left: 0;
+}
+
+.bt1.on {
+    background: #333;
+    color: #fff !important;
+}
+
+.ipt1 {
+    width: 100%;
+    padding: 5px 5px 10px 5px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #000;
+    font-size: 1.6rem;
+}
+
+.ipt1.short {
+    width: 50px;
+    text-align: center;
+}
+
+.tbl-wrap {
+    margin: 60px 0;
+}
+
+.tbl1 {
+    width: 100%;
+}
+
+.tbl1 thead th {
+    background: #f5f5f5;
+    text-align: center;
+    font-size: 1.6rem;
+}
+
+.tbl1 th,
+.tbl1 td {
+    padding: 15px;
+    text-align: center;
+    font-size: 1.6rem;
+}
+
+.tbl1 tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+@media ( max-width: 1000px ) {
+    .ipt1 {
+        font-size: 1.4rem;
+    }
+
+    .ipt1.short {
+        width: 40px;
+    }
+
+    .tbl-wrap {
+        width: calc(100% - 40px);
+        margin: 20px auto;
+    }
+
+    .tbl-wrap.scroll {
+        width: calc(100% - 20px);
+        margin-left: 20px;
+        margin-right: 0;
+        overflow-x: auto;
+    }
+
+    .tbl-wrap.scroll {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+
+    .tbl-wrap.scroll::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera*/
+    }
+
+    .tbl-wrap.scroll > div {
+        width: 600px;
+        margin-right: 20px;
+    }
+
+    .tbl1 thead th {
+        font-size: 1.2rem;
+    }
+
+    .tbl1 th,
+    .tbl1 td {
+        padding: 10px;
+        font-size: 1.2rem;
+    }
+
+    .bt-wrap {
+        margin: 20px 0;
+    }
+}

@@ -1,0 +1,113 @@
+@charset "utf-8";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
+/*
+Thin 100
+Light 300
+Regular 400
+Medium 500
+Bold 700
+Black 900
+*/
+
+* { margin: 0; padding: 0; border: 0; font-family: 'Noto Sans KR', sans-serif; }
+html { overflow-x: auto; height: 100%; font-size: 10px; }
+option, x:-moz-any-link { padding-right: 4px; }	/* Firefox Fix */
+option, x:-moz-any-link, x:default { padding-right: 0; } /* Firefox Fix */
+* html #png {background: none; filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='img.png',sizingMethod='crop'); }
+
+body {
+	position: relative;
+	width: 100%; height: 100%;
+	margin: 0; padding: 0;
+	background-color: #FFF;
+	font-weight: normal; font-size: 12px; color: #231f20;
+}
+
+/* 링크(일반) */
+a:link, a:visited { color: inherit; text-decoration: none; }
+a:hover, a:active { color: inherit; text-decoration: none; }
+
+ul, ol, li { list-style: none; }
+fieldset, img { vertical-align: middle; border: none; }
+hr, caption, legend { display: none; }
+address, em { font-style: normal; }
+table { border-collapse: collapse; }
+p { margin:0px; padding:0px; }
+input {
+	-webkit-appearance: none;
+	-webkit-border-radius: 0;
+}
+input[type="password"] { font-family: Arial; }
+
+input[type="checkbox"] {
+    -webkit-appearance: auto;
+	width: 15px;
+	height: 15px;
+}
+
+/* placeholder style */
+input::placeholder,
+textarea::placeholder {
+	font-family: 'NanumSquare', sans-serif;
+	color: #bcc4c5 !important;
+	opacity: 1; /* Firefox */
+}
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+	font-family: 'NanumSquare', sans-serif;
+	color: #bcc4c5 !important;
+}
+input::-ms-input-placeholder,
+textarea::-ms-input-placeholder {
+	font-family: 'NanumSquare', sans-serif;
+	color: #bcc4c5 !important;
+}
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+	font-family: 'NanumSquare', sans-serif;
+	color: #bcc4c5 !important;
+}
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  font-family: 'NanumSquare', sans-serif;
+	color: #bcc4c5 !important;
+}
+.placeholdersjs {
+	color: #bcc4c5 !important;
+}
+
+/* Internet Explorer 텍스트 삭제 버튼
+input[type="text"]::-ms-clear { display: none !important; }
+input[type="text"]:-ms-clear { display: none !important; }
+*/
+
+input[type="radio"], input[type="button"], input[type="submit"], label { cursor: pointer; }
+input[type=button] { background: transparent; }
+textarea { overflow: auto; }
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+	outline: 0;
+}
+select {
+	-webkit-appearance: none;
+	   -moz-appearance: none;
+	        appearance: none;
+	    -ms-appearance: none;
+	     -o-appearance: none;
+}
+select::-ms-expand {
+    display: none;
+}
+
+/* 기본 클래스 */
+.loadingAlign { position:absolute; top: 50%; left: 50%; width:30em; height:2em; margin-top: -1em; margin-left: -15em; text-align:center; }
+
+/* center align error */
+.errorAlign { position:absolute; top: 50%; left: 50%; width:30em; height:8em; margin-top: -4em; margin-left: -15em; text-align:left; background-color:#F3F3F3; border: 1px solid #CCCCCC; padding:5px; }
+.blind { display: none; }
+#skipmenu { position: absolute; visibility: hidden; }
+
+/* ie6에서 png투명픽스 */
+.iePngFix { behavior: url(/iepngfix/iepngfix.htc); }

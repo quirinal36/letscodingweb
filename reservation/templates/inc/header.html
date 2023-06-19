@@ -1,0 +1,147 @@
+{% load static %}
+<div>
+    <div>
+        <h1 class="logo">
+            <a href="{% url 'reservations:index' %}">
+                용인형 공유학교
+            </a>
+        </h1>
+        <!-- PC -->
+        <div id="navWrap" class="pc">
+            <nav>
+                <ul class="dep1">
+                    <li>
+                        <a href="#">공유학교란</a>
+                        <ul class="dep2">
+                            <div>
+                                <li><a href="#">이해하기</a></li>
+                                <li><a href="#">알아보기</a></li>
+                            </div>
+                        </ul>
+                    </li>
+                    <li><a href="#">체험처 소개</a></li>
+                    <li><a href="#">공유학교 A to Z</a></li>
+                    <li>
+                        <a href="{% url 'reservations:calendar' %}">교육신청/조회</a>
+                        <ul class="dep2">
+                            <div>
+                                <li><a href="{% url 'reservations:calendar' %}">교육신청</a></li>
+                                <li><a href="{% url 'reservations:applyList' %}">조회</a></li>
+                            </div>
+                        </ul>
+                    </li>
+                    {% if user.is_active %}
+                    <li>                        
+                        <a href="#">{{user.username}}</a>
+                        <ul class="dep2">
+                            <div>
+                                {% if user.is_staff%}
+                                <li>
+                                    관리자
+                                </li>
+                                {% endif %}
+                                <li>
+                                    <a href="{% url 'reservations:logout' %}">logout</a>
+                                </li>
+                            </div>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li>                        
+                        <a href="{% url 'reservations:login' %}">로그인</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        <!-- MOBILE -->
+        <div id="navWrap" class="mobile">
+            <button class="bt_nav">
+                <img src="{% static 'reservations/img/bt_nav.png' %}" alt="메뉴 열기" class="idx">
+                <img src="{% static 'reservations/img/bt_nav_sub.png' %} " alt="메뉴 열기" class="sub">
+            </button>
+            <div class="mobile_nav_wrap">
+                <button class="bt_nav_close">
+                    <img src="{% static 'reservations/img/bt_nav_close.png' %}" alt="메뉴 닫기" class="idx">
+                    <img src="{% static 'reservations/img/bt_nav_close_sub.png' %}" alt="메뉴 닫기" class="sub">
+                </button>
+                <div class="mobile_nav">
+                    <div class="list">
+                        <ul class="dep1">
+                            <li>
+                                <a href="#:;">공유학교란</a>
+                                <ul class="dep2">
+                                    <li><a href="#">이해하기</a></li>
+                                    <li><a href="#">알아보기</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">체험처 소개</a></li>
+                            <li><a href="#">공유학교 A to Z</a></li>
+                            <li>
+                                <a href="#:;">교육신청/조회</a>
+                                <ul class="dep2">
+                                    <li><a href="{% url 'reservations:calendar' %}">교육신청</a></li>
+                                    <li><a href="{% url 'reservations:applyList' %}">조회</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lines">
+                    <div class="top"></div>
+                    <div class="bottom"></div>
+                    <div class="left"></div>
+                    <div class="right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(function(){
+    // 모바일 네비게이션 열기 
+    $(".bt_nav").click(function(){
+        $("html").addClass("noScroll");
+        $(this).hide();
+        $(".bt_nav_close").show();
+        $(".mobile_nav_wrap").show();
+    });
+
+    // 1000px 넘어가면 html.noscroll 해제
+    $(window).resize(function(){
+        var window_width = $(window).width();
+        if( window_width <= 1000 ) {
+            $("html").removeClass("noScroll");
+        }
+    });
+
+    // 모바일 네비게이션 닫기
+    $(".bt_nav_close").click(function(){
+        $("html").removeClass("noScroll");
+        $(this).hide();
+        $(".bt_nav").show();
+        $(".mobile_nav_wrap").hide();
+    });
+
+    // 모바일 네비게이션 2차 메뉴 열기
+	$("#navWrap.mobile .dep1 > li > a").click(function(){
+        $("#navWrap.mobile .dep1 > li").not($(this).parent()).removeClass("on");
+		$(this).parent().toggleClass("on");
+		$("#navWrap.mobile .dep2").not($(this).find("+ul")).slideUp();
+		$(this).find("+ul").slideToggle();
+	});
+
+    // gnb style
+    // console.log( $(location).attr('pathname') );
+    var url = $(location).attr('pathname');
+    if( url == "{% url 'reservations:index' %}" ) {
+        $("#gnb-index").addClass("on");
+    } else if( url == "/review.html" ) {
+        $("#gnb-review").addClass("on");
+    } else if( url == "/portfolio.html" ) {
+        $("#gnb-portfolio").addClass("on");
+    }
+});
+
+</script>
