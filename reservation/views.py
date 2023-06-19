@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, FormView
 from django.contrib.auth import authenticate, login
-from .forms import BoardForm, SignUpForm
+from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_POST
 from .models import Board, User, Event
@@ -20,8 +20,24 @@ def index(request):
 
 ################# User #################
 def logout(request):
-    
     return render(request, "logout.html", None)
+
+class LoginView(FormView):
+    #redirect_authenticated_user = True
+    form_class = PrettyAuthenticationForm
+    template_name = 'member/login.html'
+    model = User  
+    
+    def get_success_url(self):
+        return reverse_lazy('reservations:index')
+    
+    def form_valid(self, form):
+        email = form.cleaned_data.get('email')
+        password = form.cleaned_data.get('password1')
+        
+        user = authenticate(self.request, username=email, password=password)
+        if user is not None:
+            login(self.request, user)
 
 class SignupView(FormView):
     form_class = SignUpForm
@@ -113,7 +129,7 @@ def delete(request, board_id):
 def calendar(request):
     return render(request, "program/calendar.html", None)
 
-@login_required(login_url="/reservation/login")
+# @login_required(login_url="/reservation/login")
 def applyList(request):
     board_list = Board.objects.order_by("id")
     context = {"board_list": board_list}

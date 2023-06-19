@@ -1,7 +1,15 @@
 from django import forms
 from .models import Board, User
-#from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm
 
+class PrettyAuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
+        class_update_fields = ['username', 'password']
+        for field_name in class_update_fields:
+            self.fields[field_name].widget.attrs.update({
+                'class': 'ipt1'
+            })
 
 class BoardForm(forms.ModelForm):
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
