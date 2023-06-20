@@ -53,14 +53,16 @@ class SignupView(FormView):
     form_class = SignUpForm
     template_name = 'member/join.html'
     success_url = reverse_lazy('reservations:index')
-    model = User
+    
 
     def form_valid(self, form):
+        print("form_valid")
         form.save()
         email = form.cleaned_data.get('email')
-        password = form.cleaned_data.get('password1')
-        
+        password = form.cleaned_data.get('password')
+        print(f"email:{email}, password:{password}")
         user = authenticate(self.request, username=email, password=password)
+        print(user)
         if user is not None:
             login(self.request, user)
         user.verify_email()

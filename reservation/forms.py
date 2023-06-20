@@ -1,6 +1,6 @@
 from django import forms
 from .models import Board, User, Event
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 class PrettyAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -17,16 +17,18 @@ class BoardForm(forms.ModelForm):
         model = Board
         fields = ('title', 'contents')
         
-class SignUpForm(forms.ModelForm):
+class SignUpForm(UserCreationForm):
     class Meta:
         model = User
-        fields = (
-            "first_name",
-            "last_name",
-            'email',
-        )
-    password = forms.CharField(widget=forms.PasswordInput)
-    password1 = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+        fields = [
+            'name',
+            'username',
+            'school',
+        ]
+        password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+        password2 = forms.CharField(label='Password confirmation', 
+                                    widget=forms.PasswordInput,
+                                    help_text = 'Enter the same password as above, for verification')
     # email이 이미 등록되었는지에 대한 validation
     def clean_email(self):
         email = self.cleaned_data.get("email") # 필드의 입력값 가져오기
@@ -47,6 +49,7 @@ class SignUpForm(forms.ModelForm):
     
     # save 매서드로 DB에 저장
     def save(self):
+        print("save method")
         user = super().save(commit=False) # Object는 생성하지만, 저장은 하지 않습니다.
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
