@@ -10,40 +10,42 @@
             <!-- 회원가입 -->
             <div class="form-style1">
                 <form method="post">
-                    {% csrf_token %}
                     
                     <div class="box">
+                        {% csrf_token %}
+                        
                         <dl>
-                            <dt>이름 *</dt>
-                            <dd>
-                                {{form.name}}
+                            <dt>{{ form.name.label }} *</dt>
+                            <dd class="ipt1">
+                                {{ form.name }}
+
                                 <p class="guide">이름을 입력하세요.</p>
                             </dd>
                         </dl>
                         <dl>
                             <dt>이메일 주소 *</dt>
-                            <dd>
+                            <dd class="ipt1">
                                 {{form.username}}
                                 <p class="guide">이메일 주소를 입력하세요.</p>
                             </dd>
                         </dl>
                         <dl>
                             <dt>비밀번호 *</dt>
-                            <dd>
+                            <dd class="ipt1">
                                 {{form.password1}}
                                 <p class="guide">비밀번호를 입력하세요.</p>
                             </dd>
                         </dl>
                         <dl>
                             <dt>비밀번호 확인 *</dt>
-                            <dd>
+                            <dd class="ipt1">
                                 {{form.password2}}
                                 <p class="guide">비밀번호가 일치하지 않습니다.</p>
                             </dd>
                         </dl>
                         <dl>
                             <dt>학교명</dt>
-                            <dd>
+                            <dd class="ipt1">
                                 {{form.school}}
                             </dd>
                         </dl>
