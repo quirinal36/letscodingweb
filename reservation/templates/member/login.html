@@ -20,7 +20,9 @@
                                 <input type="text" placeholder="이메일 주소 입력" class="ipt1">
                                 {% endcomment %}
                                 {{ form.username }}
-                                <p class="guide">이메일 주소를 입력하세요.</p>
+                                {% if messages %}
+                                    <p class="guide">이메일 주소를 입력하세요.</p>
+                                {% endif %}
                             </dd>
                         </dl>
                         <dl>

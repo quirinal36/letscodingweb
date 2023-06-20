@@ -20,7 +20,6 @@ urlpatterns = [
     path("update/<int:board_id>/", views.update, name="update"),
     path("delete/<int:board_id>/", views.delete, name="delete"),
     path("verify/<str:key>", views.complete_verification, name="complete-verification"), #인증 메일 내 링크가 클릭되면 "complete_verification" 함수가 작동합니다:)
-    path("block/", views.block, name="block"),
     path("calendar/", views.calendar, name="calendar"),
     path("applyList/", views.applyList, name="applyList"),
     path("event/", views.event, name="event"),
