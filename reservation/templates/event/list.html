@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+    {% load static %}
+{% block content %}
+    <div id="containerWrap">
+        <ol>
+            {% for item in event_list %}
+                <li>
+                    <a href="{% url 'reservations:eventDetail' item.id %}"/>
+                        {{ item.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ol>
+
+        <a href="{% url 'reservations:eventCreate' %}">새로 만들기</a>
+    </div>
+{% endblock %}

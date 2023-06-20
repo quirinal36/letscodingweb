@@ -1,18 +1,18 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template import loader
+from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, FormView
 from django.contrib.auth import authenticate, login
-from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm
+from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_http_methods, require_POST
 from .models import Board, User, Event
+from django.views.generic import View
 
-
-def block(request):
-    return render(request, "blockly.html", None)
 def index(request):
     board_list = Board.objects.order_by("id")
     context = {"board_list": board_list}
@@ -22,22 +22,32 @@ def index(request):
 def logout(request):
     return render(request, "logout.html", None)
 
-class LoginView(FormView):
+class LoginView(View):
     #redirect_authenticated_user = True
     form_class = PrettyAuthenticationForm
     template_name = 'member/login.html'
     model = User  
     
-    def get_success_url(self):
-        return reverse_lazy('reservations:index')
-    
-    def form_valid(self, form):
-        email = form.cleaned_data.get('email')
-        password = form.cleaned_data.get('password1')
+    def get(self, request):
+        form = self.form_class()
+        #message = ''
+        return render(request, 
+                      self.template_name, 
+                      context={'form': form, 'message':messages})
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=email, password=password)
         
-        user = authenticate(self.request, username=email, password=password)
-        if user is not None:
-            login(self.request, user)
+            if user is not None:
+                login(self.request, user)
+                return redirect('reservations:index')
+        message = 'Login failed!'
+        return render(request, 
+                      self.template_name, 
+                      context={'form': form, 'message':messages})
 
 class SignupView(FormView):
     form_class = SignUpForm
@@ -55,6 +65,7 @@ class SignupView(FormView):
             login(self.request, user)
         user.verify_email()
         return super().form_valid(form)
+    
 def complete_verification(request, key):
     try:
         user = models.User.objects.get(email_secret=key) # 👈 uuid값을 기준으로 Object를 가져와요!
@@ -66,6 +77,7 @@ def complete_verification(request, key):
         # to do: add error message
         pass
     return redirect(reverse("core:home"))
+
 ################# Board #################
 @login_required(login_url='/reservation/login/')
 @require_http_methods({"GET", "POST"})
@@ -134,3 +146,76 @@ def applyList(request):
     board_list = Board.objects.order_by("id")
     context = {"board_list": board_list}
     return render(request, "program/apply-list.html", context)
+
+
+### 관리자 교육등록및 조회 EVENT ###
+@staff_member_required
+@login_required(login_url='/reservation/login/')
+@require_http_methods({"GET", "POST"})
+def create(request):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            eventForm = EventForm(initial={'user':request.user})
+            context = {'eventForm':eventForm}
+            return render(request, 'event/create.html', context)
+        else:
+            return HttpResponseRedirect(reverse('login'))
+    
+    elif request.method == "POST":
+        eventForm = EventForm(request.POST)
+
+        if eventForm.is_valid():
+            event = eventForm.save(commit=False)
+            event.user = request.user
+            event.save()
+            return redirect('/reservation/event/detail/'+str(event.id))
+        
+@login_required(login_url='/reservation/login/')
+def readEvent(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    
+    return render(request, "event/read.html", {
+        "event": event,
+        "error_message":"You didn't select a choice."
+    })
+@staff_member_required
+@login_required(login_url="/reservation/login")
+def eventDelete(request, event_id):
+    event = Event.objects.get(id = event_id)
+    if request.user != event.user:
+        return redirect("/reservation/")
+    event.delete()
+    return redirect("reservation/")
+@staff_member_required
+@login_required(login_url="/reservation/login")
+@require_http_methods({"GET", "POST"})
+def eventUpdate(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    if request.method == "GET" :
+        event = Event.objects.get(id=event_id)
+        eventForm = EventForm(instance=event, initial={'user':request.user})
+        
+        context = {'eventForm': eventForm}
+        return render(request, 'event/create.html', context)
+    elif request.method == "POST":
+        eventForm = EventForm(request.POST, instance = event)
+        
+        if eventForm.is_valid():
+            event = eventForm.save(commit=False)
+            
+            event.save()
+            
+        return redirect('/reservation/event/detail/'+str(event.id))
+    
+def event(request):
+    event_list = Event.objects.order_by("id")
+    context = {"event_list": event_list}
+    return render(request, "event/list.html", context)
+
+def eventDetail(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    print(event)
+    return render(request, "event/detail.html", {
+        "event": event,
+        "error_message":"You didn't select a choice."
+    })

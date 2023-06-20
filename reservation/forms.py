@@ -1,5 +1,5 @@
 from django import forms
-from .models import Board, User
+from .models import Board, User, Event
 from django.contrib.auth.forms import AuthenticationForm
 
 class PrettyAuthenticationForm(AuthenticationForm):
@@ -53,3 +53,21 @@ class SignUpForm(forms.ModelForm):
         user.username = email
         user.set_password(password) # set_password는 비밀번호를 해쉬값으로 변환해요!
         user.save() # 이제 저장해줄께요:)    
+        
+class EventForm(forms.ModelForm):
+    user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    start_date = forms.DateTimeField(
+        input_formats=['%Y/%m/%d'],
+        widget = forms.DateTimeInput(attrs={
+            'class': 'form-control datetimepicker-input'
+        })
+    )
+    finish_date = forms.DateTimeField(
+        input_formats=['%Y/%m/%d'],
+        widget = forms.DateTimeInput(attrs={
+            'class': 'form-control datetimepicker-input'
+        })
+    )
+    class Meta:
+        model = Event
+        fields = ('title', 'start_date', 'finish_date')

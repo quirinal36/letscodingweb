@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script>
+$(function () {
+    $(".datetimepicker-input").datepicker({ dateFormat: "yy-mm-dd" });
+});
+</script>
+<form action="" method="post">
+    {% csrf_token %}
+    {{eventForm}}
+    <input type="submit">
+</form>
+{% endblock %}

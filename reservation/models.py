@@ -53,11 +53,18 @@ class Board(models.Model) :
     create_date =models.DateTimeField(auto_now_add=True)
     
 class Event(models.Model):
+    title = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     start_date = models.DateField(auto_now=False, auto_now_add=False)
     finish_date = models.DateField(auto_now=False, auto_now_add=False)
-    students = models.IntegerField("학생수", default = 1)
-    school = models.TextField()
-    grade = models.TextField("학년")
     create_date =models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
+    
+class Application(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    grade = models.IntegerField()
+    students = models.IntegerField()
+    create_date =models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
     
