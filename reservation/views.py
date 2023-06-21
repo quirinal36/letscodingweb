@@ -49,37 +49,24 @@ class LoginView(View):
                       self.template_name, 
                       context={'form': form, 'message':messages})
 
-class SignupView(View):
+class SignupView(FormView):
     form_class = SignUpForm
     template_name = 'member/join.html'
     success_url = reverse_lazy('reservations:index')
-    model = User
-
-    def get(self, request):
-        form = self.form_class()
-        return render(request, self.template_name,
-                        context={'form':form, 'message':messages})
-    def post(self, request):
-        form = self.form_class()
-        if form.is_valid():
-            new_user = form.save()
-            login(request, new_user)
-        return render(request, self.template_name,
-                        context={'form':form, 'message':messages})
-    """
+    
     def form_valid(self, form):
         print("form_valid")
         form.save()
-        email = form.cleaned_data.get('email')
-        password = form.cleaned_data.get('password')
+        email = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
         print(f"email:{email}, password:{password}")
         user = authenticate(self.request, username=email, password=password)
         print(user)
         if user is not None:
             login(self.request, user)
-        user.verify_email()
+        # user.verify_email()
         return super().form_valid(form)
-    """
+    
 def complete_verification(request, key):
     try:
         user = models.User.objects.get(email_secret=key) # 👈 uuid값을 기준으로 Object를 가져와요!

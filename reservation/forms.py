@@ -30,6 +30,7 @@ class SignUpForm(UserCreationForm):
         password2 = forms.CharField(label='Password confirmation', 
                                     widget=forms.PasswordInput,
                                     help_text = 'Enter the same password as above, for verification')
+    """
     # email이 이미 등록되었는지에 대한 validation
     def clean_email(self):
         email = self.cleaned_data.get("email") # 필드의 입력값 가져오기
@@ -47,17 +48,23 @@ class SignUpForm(UserCreationForm):
             raise forms.ValidationError("Password confirmation does not match")
         else:
             return password
-    
+    """
     # save 매서드로 DB에 저장
-    def save(self):
+    def save(self, *args, **kwargs):
         print("save method")
         user = super().save(commit=False) # Object는 생성하지만, 저장은 하지 않습니다.
-        email = self.cleaned_data.get("email")
-        password = self.cleaned_data.get("password")
+        email = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password1")
+        name = self.cleaned_data.get("name")
+        school = self.cleaned_data.get("school")
+        
         user.username = email
         user.set_password(password) # set_password는 비밀번호를 해쉬값으로 변환해요!
-        user.save() # 이제 저장해줄께요:)    
-        
+        user.name = name
+        user.school = school
+        user.save() # 이제 저장해줄께요:)   
+        return user 
+    
 class EventForm(forms.ModelForm):
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     start_date = forms.DateTimeField(
@@ -72,6 +79,12 @@ class EventForm(forms.ModelForm):
             'class': 'form-control datetimepicker-input'
         })
     )
+    STAY_CHOICES = (
+        (0, '숙박형'),
+        (1, '무박형')
+    )
+    stay = forms.ChoiceField(choices = STAY_CHOICES)
+    section = forms.CharField()
     class Meta:
         model = Event
         fields = ('title', 'start_date', 'finish_date')

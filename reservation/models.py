@@ -55,6 +55,8 @@ class Board(models.Model) :
 class Event(models.Model):
     title = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stay = models.PositiveIntegerField(default = 0)
+    section = models.CharField(max_length=200, default='')
     start_date = models.DateField(auto_now=False, auto_now_add=False)
     finish_date = models.DateField(auto_now=False, auto_now_add=False)
     create_date =models.DateTimeField(auto_now_add=True)
@@ -63,7 +65,7 @@ class Event(models.Model):
 class Application(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    grade = models.IntegerField()
+    grade = models.PositiveIntegerField(default = 0)
     students = models.IntegerField()
     create_date =models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
