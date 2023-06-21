@@ -6,11 +6,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, FormView
 from django.contrib.auth import authenticate, login
-from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm
+from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_http_methods, require_POST
-from .models import Board, User, Event
+from .models import Board, User, Event, Grades, Application
 from django.views.generic import View
 
 def index(request):
@@ -139,14 +139,7 @@ def delete(request, board_id):
 
 
     
-def calendar(request):
-    return render(request, "program/calendar.html", None)
 
-# @login_required(login_url="/reservation/login")
-def applyList(request):
-    board_list = Board.objects.order_by("id")
-    context = {"board_list": board_list}
-    return render(request, "program/apply-list.html", context)
 
 
 ### 관리자 교육등록및 조회 EVENT ###
@@ -215,8 +208,53 @@ def event(request):
 
 def eventDetail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    print(event)
+    
     return render(request, "event/detail.html", {
         "event": event,
+        "error_message":"You didn't select a choice."
+    })
+    
+### APPLY ###
+def calendar(request):
+    return render(request, "program/calendar.html", None)
+
+# @login_required(login_url="/reservation/login")
+def applyList(request):
+    board_list = Board.objects.order_by("id")
+    context = {"board_list": board_list}
+    return render(request, "program/apply-list.html", context)
+
+# @login_required(login_url="/reservation/login")
+def applyFormView(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    grades = Grades.objects.order_by("id")
+    applyForm = ApplyForm(initial={'user':request.user})
+    
+    return render(request, "program/apply.html", {
+        'form': applyForm,
+        "event": event,
+        "error_message":"You didn't select a choice.",
+        "user": request.user,
+        "grades":grades
+    })
+@require_http_methods({"GET", "POST"})
+# @login_required(login_url='/reservation/login/')
+def applyView(request):
+    if request.method == 'POST':
+        applyForm = ApplyForm(request.POST)
+        print('applyForm post')
+        print(list(request.POST.items()))
+        if applyForm.is_valid():
+            apply = applyForm.save(commit=False)
+            apply.user = request.user
+            apply.save()
+            return redirect('event/apply/detail/'+str(apply.id))
+        else :
+            print('applyForm invalid')
+
+def applyDetail(request, apply_id):
+    application = get_object_or_404(Application, pk=event_id)
+    return render(request, "program/read.html", {
+        "application": application,
         "error_message":"You didn't select a choice."
     })

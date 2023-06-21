@@ -61,12 +61,15 @@ class Event(models.Model):
     finish_date = models.DateField(auto_now=False, auto_now_add=False)
     create_date =models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
+        
+class Grades(models.Model):
+    grade = models.PositiveIntegerField(default = 0)
+    tgrade = models.CharField(max_length=200)
     
 class Application(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    grade = models.PositiveIntegerField(default = 0)
+    grade = models.ForeignKey(Grades, on_delete=models.CASCADE)
     students = models.IntegerField()
     create_date =models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
-    

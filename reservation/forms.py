@@ -1,6 +1,7 @@
 from django import forms
-from .models import Board, User, Event
+from .models import Board, User, Event, Application
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from taggit.models import Tag 
 
 class PrettyAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -70,13 +71,15 @@ class EventForm(forms.ModelForm):
     start_date = forms.DateTimeField(
         input_formats=['%Y/%m/%d'],
         widget = forms.DateTimeInput(attrs={
-            'class': 'form-control datetimepicker-input'
+            'class': 'form-control datetimepicker-input',
+            'autocomplete' : 'off'
         })
     )
     finish_date = forms.DateTimeField(
         input_formats=['%Y/%m/%d'],
         widget = forms.DateTimeInput(attrs={
-            'class': 'form-control datetimepicker-input'
+            'class': 'form-control datetimepicker-input',
+            'autocomplete' : 'off'
         })
     )
     STAY_CHOICES = (
@@ -87,4 +90,11 @@ class EventForm(forms.ModelForm):
     section = forms.CharField()
     class Meta:
         model = Event
-        fields = ('title', 'start_date', 'finish_date')
+        fields = ('title', 'start_date', 'finish_date', 'stay', 'section')
+
+class ApplyForm(forms.ModelForm):
+    def is_valid(self):
+        return True
+    class Meta:
+        model = Application
+        fields = ('students','user', 'event', 'grade',)

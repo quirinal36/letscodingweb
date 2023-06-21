@@ -22,11 +22,14 @@ urlpatterns = [
     path("verify/<str:key>", views.complete_verification, name="complete-verification"), #인증 메일 내 링크가 클릭되면 "complete_verification" 함수가 작동합니다:)
     path("calendar/", views.calendar, name="calendar"),
     path("applyList/", views.applyList, name="applyList"),
+    path("event/applyForm/<int:event_id>/", views.applyFormView, name="eventApplyForm"),
+    path("event/apply/", views.applyView, name="apply"),
     path("event/", views.event, name="event"),
     path("event/detail/<int:event_id>", views.eventDetail, name="eventDetail"),
     path("event/create/", views.create, name="eventCreate"),
     path("event/update/", views.update, name="eventUpdate"),
     path("event/delete/", views.delete, name="eventDelete"),
+    path("event/apply/detail/<int:apply_id>/", views.applyDetail, name="applyDetail"),
 ]
 
 
