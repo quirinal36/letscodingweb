@@ -1,7 +1,6 @@
 from django import forms
 from .models import Board, User, Event, Application
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from taggit.models import Tag 
 
 class PrettyAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
