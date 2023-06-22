@@ -69,7 +69,7 @@ class SignupView(FormView):
         email = form.cleaned_data.get('email')
         password = form.cleaned_data.get('password1')
         print(f"email:{email}, password:{password}")
-        user = authenticate(self.request, username=email, password=password)
+        user = authenticate(self.request, email=email, password=password)
         print(user)
         if user is not None:
             login(self.request, user)
