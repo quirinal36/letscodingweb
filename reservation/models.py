@@ -57,7 +57,7 @@ class User(AbstractUser):
     object = UserManager()
     
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = []
     
     name = models.CharField(max_length=120, default="", blank=True)
     email_verified = models.BooleanField(default=False)  # 👈 인증여부(True, False)
