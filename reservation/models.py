@@ -2,10 +2,40 @@ import uuid # 👈 "uuid" import
 from django.conf import settings  # 👈 "settings.py" import
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.base_user import BaseUserManager
 from django.core.mail import send_mail # 👈 "send_mail" import
 from django.utils.html import strip_tags # 👈 "strip_tags" import
 from django.template.loader import render_to_string # 👈 "render_to_string" import
 
+
+class UserManager(BaseUserManager):
+    use_in_migrations = True
+
+    def _create_user(self, email, password, **extra_fields):
+        if not email:
+            raise ValueError('Users require an email field')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
+
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self._create_user(email, password, **extra_fields)
+    
 class User(AbstractUser):
     """
     GENDER_MALE = "male"
@@ -22,6 +52,13 @@ class User(AbstractUser):
     
     birthdate = models.DateField(null=True)
     """
+    username = None
+    email = models.EmailField(unique=True)
+    object = UserManager()
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+    
     name = models.CharField(max_length=120, default="", blank=True)
     email_verified = models.BooleanField(default=False)  # 👈 인증여부(True, False)
     email_secret = models.CharField(max_length=120, default="", blank=True)  # 👈 uuid를 사용하여 난수 임시 저장

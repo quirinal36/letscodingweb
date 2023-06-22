@@ -2,15 +2,21 @@ from django import forms
 from .models import Board, User, Event, Application
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
-class PrettyAuthenticationForm(AuthenticationForm):
+class PrettyAuthenticationForm(forms.Form):
+    email = forms.EmailField(widget=forms.TextInput(attrs={'autofocus':True, 'class':'ipt1'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'ipt1'}))
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(self, *args, **kwargs)
-        class_update_fields = ['username', 'password']
+        class_update_fields = ['password']
         for field_name in class_update_fields:
             self.fields[field_name].widget.attrs.update({
                 'class': 'ipt1'
             })
-
+    def is_valid(self):
+        return True
+    """
+    
 class BoardForm(forms.ModelForm):
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     class Meta:
@@ -22,7 +28,7 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = [
             'name',
-            'username',
+            'email',
             'school',
         ]
         
@@ -53,12 +59,12 @@ class SignUpForm(UserCreationForm):
     def save(self, *args, **kwargs):
         print("save method")
         user = super().save(commit=False) # Object는 생성하지만, 저장은 하지 않습니다.
-        email = self.cleaned_data.get("username")
+        email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password1")
         name = self.cleaned_data.get("name")
         school = self.cleaned_data.get("school")
         
-        user.username = email
+        user.email = email
         user.set_password(password) # set_password는 비밀번호를 해쉬값으로 변환해요!
         user.name = name
         user.school = school

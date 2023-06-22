@@ -35,7 +35,7 @@
                     </li>
                     {% if user.is_active %}
                     <li>                        
-                        <a href="#">{{user.username}}</a>
+                        <a href="#">{{user.email}}</a>
                         <ul class="dep2">
                             <div>
                                 {% if user.is_staff%}
@@ -89,7 +89,7 @@
                             </li>
                             {% if user.is_active %}
                                 <li>                        
-                                    <a href="#">{{user.username}}</a>
+                                    <a href="#">{{user.email}}</a>
                                     <ul class="dep2">
                                         <div>
                                             {% if user.is_staff%}

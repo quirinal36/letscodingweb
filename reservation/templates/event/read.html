@@ -5,7 +5,7 @@
     <p>{{ event.title }}</p>
     <p>{{ event.start_date }}</p>
     <p>{{ event.finish_date }}</p>
-    <p>{{ event.user.username }}</p>
+    <p>{{ event.user.email }}</p>
     {% if event.user.id == user.id %}
         <a href="{% url 'reservations:eventUpdate' event.id %}"/>수정</a>
         <a href="{% url 'reservations:eventDelete' event.id %}"/>삭제</a>

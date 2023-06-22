@@ -4,9 +4,9 @@
     <div id="containerWrap">
     {% comment "note" %}
         {% if user.is_authenticated and user.is_staff%}
-            <p>Hello, {{user.username}}. You are a staff</p>
+            <p>Hello, {{user.email}}. You are a staff</p>
         {% elif user.is_authenticated %}
-            <p>Hello, {{user.username}}</p>
+            <p>Hello, {{user.email}}</p>
         {% else %}
             <p>You are not logged in</p>
         {%endif%}

@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-n__*8fzyac%pt2dpi_2yezyjk_ckporghm18e-2rh37_ahw!yp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['www.letscoding.club', '127.0.0.1']
 
@@ -169,3 +169,5 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_FROM = os.environ.get("RECIPIENT_ADDRESS")
 
 AUTH_USER_MODEL = "reservation.User"
+
+AUTHENTICATION_BACKENDS = ['reservation.backends.EmailBackend']

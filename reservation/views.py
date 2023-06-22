@@ -31,7 +31,7 @@ class LoginView(View):
     #redirect_authenticated_user = True
     form_class = PrettyAuthenticationForm
     template_name = 'member/login.html'
-    model = User  
+    model = User
     
     def get(self, request):
         form = self.form_class()
@@ -40,12 +40,16 @@ class LoginView(View):
                       self.template_name, 
                       context={'form': form, 'message':messages})
     def post(self, request):
+        print("Login Post")
         form = self.form_class(request.POST)
+        print(list(request.POST.items()))
         if form.is_valid():
-            email = form.cleaned_data.get('username')
+            print("Login Form Valid")
+            email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            user = authenticate(username=email, password=password)
-        
+            print(f"email:{email}, password:{password}")
+            user = authenticate(email=email, password=password)
+            print(user)
             if user is not None:
                 login(self.request, user)
                 return redirect('reservations:index')
@@ -62,7 +66,7 @@ class SignupView(FormView):
     def form_valid(self, form):
         print("form_valid")
         form.save()
-        email = form.cleaned_data.get('username')
+        email = form.cleaned_data.get('email')
         password = form.cleaned_data.get('password1')
         print(f"email:{email}, password:{password}")
         user = authenticate(self.request, username=email, password=password)
