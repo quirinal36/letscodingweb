@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-n__*8fzyac%pt2dpi_2yezyjk_ckporghm18e-2rh37_ahw!yp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['www.letscoding.club', '127.0.0.1']
 
@@ -82,13 +82,27 @@ WSGI_APPLICATION = 'letscodingweb.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG :
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else :
+        DATABASES = {
+        'default': {
+            #'ENGINE': 'django.db.backends.sqlite3',
+            #'NAME': BASE_DIR / 'db.sqlite3',
+            
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'coding-school',  # 스키마명
+            'USER': 'turboguy', # 유저명
+            'PASSWORD': '789gagul', # 유저 비밀번호
+            'HOST': 'aa16n2xkpj5nl66.cbqm3rfz7crw.ap-northeast-2.rds.amazonaws.com', #공백으로 냅두면 default localhost
+            'PORT': '' #공백으로 냅두면 default 3306
+        }
+    }
 
 
 # Password validation

@@ -20,7 +20,7 @@
                                     <th>운영일수</th>
                                     <th>운영형태</th>
                                     <th>구분</th>
-                                    
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,33 +41,6 @@
                                     
                                 </tr>
                                 {% endfor %}
-                                <tr>
-                                    <td>2</td>
-                                    <td>2023.05.08 ~ 2023.05.12</td>
-                                    <td>50명</td>
-                                    <td>5</td>
-                                    <td>무박형</td>
-                                    <td>[균형]섹션</td>
-                                    
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>2023.05.22 ~ 2023.05.26</td>
-                                    <td>50명</td>
-                                    <td>5</td>
-                                    <td>무박형</td>
-                                    <td>[미래]섹션</td>
-                                    
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>2023.05.22 ~ 2023.05.26</td>
-                                    <td>50명</td>
-                                    <td>5</td>
-                                    <td>무박형</td>
-                                    <td>[미래]섹션</td>
-                                    
-                                </tr>
                             </tbody>
                         </table>
                     </form>
@@ -75,6 +48,7 @@
             </div>
             <div class="bt-wrap">
                 <a href="#" onclick="javascript:alert('선택된 항목이 없습니다.');" class="bt1">신청 취소</a>
+                <a href="{% url 'reservations:eventCreate' %}" class="bt1 on">교육 생성</a>
             </div>
         </div>
     </div>    

@@ -142,11 +142,6 @@ def delete(request, board_id):
     board.delete()
     return redirect("reservation/")
 
-
-    
-
-
-
 ### 관리자 교육등록및 조회 EVENT ###
 @staff_member_required
 @login_required(login_url='/reservation/login/')
@@ -177,6 +172,7 @@ def readEvent(request, event_id):
         "event": event,
         "error_message":"You didn't select a choice."
     })
+    
 @staff_member_required
 @login_required(login_url="/reservation/login")
 def eventDelete(request, event_id):
@@ -185,6 +181,7 @@ def eventDelete(request, event_id):
         return redirect("/reservation/")
     event.delete()
     return redirect("reservation/")
+
 @staff_member_required
 @login_required(login_url="/reservation/login")
 @require_http_methods({"GET", "POST"})
