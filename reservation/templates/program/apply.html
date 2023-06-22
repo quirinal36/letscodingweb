@@ -23,14 +23,14 @@
                         <dl>
                             <dt>학교명 *</dt>
                             <dd>
-                                <input type="text" name="school" value="{{ user.school }}" class="ipt1" readonly>
+                                <input type="text" value="{{ user.school }}" class="ipt1" readonly>
                                 <p class="guide">학교명을 입력하세요.</p>
                             </dd>
                         </dl>
                         <dl>
                             <dt>학년 *</dt>
                             <dd>
-                                <select name="grade">
+                                <select name="grade_id">
                                 {% for g in grades %}
                                     <option value="{{g.grade}}">{{g.tgrade}}</option>
                                 {% endfor %}
@@ -53,8 +53,9 @@
                         <dl>
                             <dt>신청자 성명 *</dt>
                             <dd>
-                                <input type="text" name="name" value="{{user.name}}" class="ipt1" readonly>
+                                <input type="text" value="{{user.name}}" class="ipt1" readonly>
                                 <input type="hidden" value="{{user.id}}" name="user_id"/>
+                                <input type="hidden" value="{{event.id}}" name="event_id"/>
                                 <p class="guide">비밀번호가 일치하지 않습니다.</p>
                             </dd>
                         </dl>

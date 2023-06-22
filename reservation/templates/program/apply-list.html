@@ -25,16 +25,24 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for application in list %}
                                 <tr>
                                     <td>1</td>
                                     <td>2023.04.10 ~ 2023.04.14</td>
-                                    <td>30명</td>
+                                    <td>{{application.students}}명</td>
                                     <td>5</td>
-                                    <td>무박형</td>
-                                    <td>[미래]섹션</td>
+                                    <td>
+                                        {% if application.event.stay == 0 %}
+                                            무박형
+                                        {% else %}
+                                            숙박형
+                                        {% endif %}
+                                    </td>
+                                    <td>[{{application.event.section}}]섹션</td>
                                     <td>미확정</td>
                                     <td>-</td>
                                 </tr>
+                                {% endfor %}
                                 <tr>
                                     <td>2</td>
                                     <td>2023.05.08 ~ 2023.05.12</td>

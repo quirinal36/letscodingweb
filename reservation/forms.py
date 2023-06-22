@@ -92,8 +92,14 @@ class EventForm(forms.ModelForm):
         fields = ('title', 'start_date', 'finish_date', 'stay', 'section')
 
 class ApplyForm(forms.ModelForm):
-    def is_valid(self):
-        return True
+    
     class Meta:
         model = Application
-        fields = ('students','user', 'event', 'grade',)
+        fields = "__all__"
+    
+    def is_valid(self):
+        #cleaned_data = super().clean()
+        #grade = cleaned_data.get('grade')
+        #students = cleaned_data.get('students')
+        #print(f"grade:{grade}, students:{students}")
+        return True
