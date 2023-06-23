@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-    <p>Logged out!</p>
-    <a href="{% url 'reservations:login'%}">Click here to login again.</a>
+<div id="containerWrap">
+    <div class="title-style1">
+        <div class="layout-center">
+            <strong>로그아웃</strong>
+        </div>
+    </div>
+    <div class="layout-center">
+        <p>Logged out!</p>
+        <a href="{% url 'reservations:login'%}">Click here to login again.</a>
+    </div>
+</div>
 {% endblock %}
