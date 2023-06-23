@@ -112,7 +112,7 @@ class EventForm(forms.ModelForm):
     start_date = forms.DateTimeField(
         input_formats=['%Y/%m/%d'],
         widget = forms.DateTimeInput(attrs={
-            'class': 'form-control datetimepicker-input',
+            'class': 'ipt1 form-control datetimepicker-input',
             'autocomplete' : 'off'
         })
     )
@@ -129,9 +129,23 @@ class EventForm(forms.ModelForm):
     )
     stay = forms.ChoiceField(choices = STAY_CHOICES)
     section = forms.CharField()
+    
     class Meta:
         model = Event
         fields = ('title', 'start_date', 'finish_date', 'stay', 'section')
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        class_update_fields = ['title', 'stay', 'section']
+        for field_name in class_update_fields:
+            self.fields[field_name].widget.attrs.update({
+                'class': 'ipt1'
+            })
+        self.fields['start_date'].widget.attrs.update({
+            'class': 'datetimepicker-input ipt1'
+        })
+        self.fields['finish_date'].widget.attrs.update({
+            'class': 'datetimepicker-input ipt1'
+        })
 
 class ApplyForm(forms.ModelForm):
     

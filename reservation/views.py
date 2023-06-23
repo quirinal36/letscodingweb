@@ -9,7 +9,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from .models import Board, User, Event, Grades, Application
 from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm
 
-from django.views.generic import View, CreateView, FormView
+from django.views.generic import View, CreateView, FormView, DetailView
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
@@ -58,17 +58,16 @@ class LoginView(View):
                 return redirect('reservations:index')
         
             messages.error(self.request, '로그인에 실패하였습니다.', extra_tags='danger')
-            context = {'form': form}
+            context = {'form': form, 'message': messages}
         return render(request, 
                       self.template_name, 
-                      context={'form': form, 'message':messages})
+                      context=context)
 
 class SignupView(FormView):
     form_class = SignUpForm
     template_name = 'member/join.html'
     success_url = reverse_lazy('reservations:index')
-    
-    
+        
     def post(self, request):
         form = self.form_class(request.POST)
         print(list(request.POST.items()))
@@ -89,8 +88,14 @@ class SignupView(FormView):
             print(user)
             if user is not None:
                 login(self.request, user)
+                return redirect('reservations:index')
+        else :
+            messages.error(self.request, '회원가입에 실패하였습니다.', extra_tags='danger')
         # user.verify_email()
-        return super().form_valid(form)
+        context = {'form' : form}
+        return render(request, 
+                      self.template_name, 
+                      context=context)
     
 def complete_verification(request, key):
     try:
@@ -183,7 +188,19 @@ def create(request):
             event.user = request.user
             event.save()
             return redirect('/reservation/event/detail/'+str(event.id))
+class EventDetailView(DetailView):
+    model = Event
+    template_name = "event/read.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        grades = Grades.objects.order_by("id")
+        context['grades'] = grades
+        context['event'] = event
         
+        return context
+    
 @login_required(login_url='/reservation/login/')
 def readEvent(request, event_id):
     event = get_object_or_404(Event, pk=event_id)

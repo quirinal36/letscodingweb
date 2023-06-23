@@ -11,10 +11,10 @@ event_patterns = [
     path("apply/", views.ApplyView.as_view(), name="apply"),
     path("apply/<int:event_id>", views.ApplyView.as_view(), name="applyForm"),
     path("", views.event, name="event"),
-    path("detail/<int:event_id>", views.eventDetail, name="eventDetail"),
+    path("detail/<int:pk>", views.EventDetailView.as_view(), name="eventDetail"),
     path("create/", views.create, name="eventCreate"),
-    path("update/", views.update, name="eventUpdate"),
-    path("delete/", views.delete, name="eventDelete"),
+    path("update/<int:pk>", views.update, name="eventUpdate"),
+    path("delete/<int:pk>", views.delete, name="eventDelete"),
     path("apply/detail/<int:apply_id>/", views.applyDetail, name="applyDetail"),
 ]
 urlpatterns = [

@@ -6,9 +6,22 @@ $(function () {
     $(".datetimepicker-input").datepicker({ dateFormat: "yy-mm-dd" });
 });
 </script>
-<form action="" method="post">
-    {% csrf_token %}
-    {{eventForm}}
-    <input type="submit">
-</form>
+<div class="title-style1">
+    <div class="layout-center">
+        <strong>교육 생성</strong>
+    </div>
+</div>
+<div class="layout-center">
+    <div class="form-style1">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="box">
+                <ul>
+                    {{eventForm.as_ul}}
+                </ul>
+                <input type="submit">
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
