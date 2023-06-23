@@ -81,7 +81,8 @@ class User(AbstractUser):
             )
             self.save() # 👈 저장(save매서드를 통해 필드의 값을 저장합니다.)
         return
-    
+    def __str__(self):
+        return f"name:{self.name}, email:{self.email}, password:{self.password}, school:{self.school}"
 # Create your models here.
 class Board(models.Model) :
     user = models.ForeignKey(User, on_delete=models.CASCADE)

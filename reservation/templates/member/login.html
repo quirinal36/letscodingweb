@@ -11,18 +11,24 @@
             <!-- 회원가입 -->
             <div class="form-style1">
                 <form method="post" action="{% url 'reservations:login' %}">
-                    {% csrf_token %}
                     <div class="box">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                    </div>
+                    {% comment %}
+                    <div class="box">
+                        {% if message %}
+                            <p class="guide">{{message}}</p>
+                        {% endif %}
                         <dl>
                             <dt>이메일 주소</dt>
                             <dd>
                                 {% comment %}
                                 <input type="text" placeholder="이메일 주소 입력" class="ipt1">
                                 {% endcomment %}
+                                {% comment %}
                                 {{ form.email }}
-                                {% if messages %}
-                                    <p class="guide">이메일 주소를 입력하세요.</p>
-                                {% endif %}
+                                
                             </dd>
                         </dl>
                         <dl>
@@ -31,19 +37,21 @@
                                 {% comment %}
                                 <input type="password" placeholder="비밀번호 입력" class="ipt1">
                                 {% endcomment %}
+                                {% comment %}
                                 {{ form.password }}
-                                <p class="guide">비밀번호를 입력하세요.</p>
+                                
                             </dd>
                         </dl>
                     </div>
+                    {% endcomment %}
                     <div class="bt-wrap">
-                        {% comment %}
-                        <a href="/program/apply-list.html" onclick="javascript:alert('일치하는 회원 정보를 찾을 수 없습니다.');" class="bt1 on">로그인</a>
-                        {% endcomment %}
+                        
+                        
                         <input type="submit" value="login" class="bt1 on">
                         <a href="#" onClick="history.back()" class="bt1">취소</a>
                     </div>
                     <input type="hidden" name="next" value="{{ next }}">
+                    
                 </form>
                 <a href="{% url 'reservations:signup' %}">SIGNUP</a>
             </div>

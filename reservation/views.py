@@ -25,7 +25,7 @@ def index(request):
 
 ################# User #################
 def logout(request):
-    return render(request, "logout.html", None)
+    return redirect(reverse_lazy("reservations:index"))
 
 class LoginView(View):
     #redirect_authenticated_user = True
@@ -40,20 +40,25 @@ class LoginView(View):
                       self.template_name, 
                       context={'form': form, 'message':messages})
     def post(self, request):
-        print("Login Post")
+        #print("Login Post")
         form = self.form_class(request.POST)
-        print(list(request.POST.items()))
+        #print(list(request.POST.items()))
+        
         if form.is_valid():
             print("Login Form Valid")
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
+            cleaned_data = form.clean()
+            email = cleaned_data.get("email")
+            password = cleaned_data.get('password')
             print(f"email:{email}, password:{password}")
+            
             user = authenticate(email=email, password=password)
             print(user)
             if user is not None:
                 login(self.request, user)
                 return redirect('reservations:index')
-        message = 'Login failed!'
+        
+            messages.error(self.request, '로그인에 실패하였습니다.', extra_tags='danger')
+            context = {'form': form}
         return render(request, 
                       self.template_name, 
                       context={'form': form, 'message':messages})
@@ -63,16 +68,27 @@ class SignupView(FormView):
     template_name = 'member/join.html'
     success_url = reverse_lazy('reservations:index')
     
-    def form_valid(self, form):
-        print("form_valid")
-        form.save()
-        email = form.cleaned_data.get('email')
-        password = form.cleaned_data.get('password1')
-        print(f"email:{email}, password:{password}")
-        user = authenticate(self.request, email=email, password=password)
-        print(user)
-        if user is not None:
-            login(self.request, user)
+    
+    def post(self, request):
+        form = self.form_class(request.POST)
+        print(list(request.POST.items()))
+        if form.is_valid():
+            print("form_valid")
+            cleaned_data = form.clean()
+            
+            form.save()
+            #email = form.cleaned_data.get('email')
+            #email = form.clean_email()
+            #password = form.cleaned_data.get('password1')
+            #password = form.clean_password()
+            email = cleaned_data.get('email')
+            password = cleaned_data.get('password1')
+            
+            print(f"email:{cleaned_data.get('email')}, password:{cleaned_data.get('password')}")
+            user = authenticate(self.request, email=email, password=password)
+            print(user)
+            if user is not None:
+                login(self.request, user)
         # user.verify_email()
         return super().form_valid(form)
     
