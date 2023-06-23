@@ -11,6 +11,7 @@ event_patterns = [
     path("apply/", views.ApplyView.as_view(), name="apply"),
     path("apply/<int:event_id>", views.ApplyView.as_view(), name="applyForm"),
     path("", views.event, name="event"),
+    path("manage/", views.EventManageView.as_view(), name="eventManage"),
     path("detail/<int:pk>", views.EventDetailView.as_view(), name="eventDetail"),
     path("create/", views.create, name="eventCreate"),
     path("update/<int:pk>", views.update, name="eventUpdate"),

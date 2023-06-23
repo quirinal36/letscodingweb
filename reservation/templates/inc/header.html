@@ -28,7 +28,7 @@
                                 <li><a href="{% url 'reservations:event' %}">교육신청</a></li>
                                 <li><a href="{% url 'reservations:applyList' %}">조회</a></li>
                                 {% if user.is_staff %}
-                                    <li><a href="{% url 'reservations:event' %}">관리자</a></li>
+                                    <li><a href="{% url 'reservations:eventManage' %}">교육관리</a></li>
                                 {% endif %}
                             </div>
                         </ul>
@@ -85,6 +85,9 @@
                                 <ul class="dep2">
                                     <li><a href="{% url 'reservations:event' %}">교육신청</a></li>
                                     <li><a href="{% url 'reservations:applyList' %}">조회</a></li>
+                                    {% if user.is_staff %}
+                                        <li><a href="{% url 'reservations:eventManage' %}">교육관리</a></li>
+                                    {% endif %}
                                 </ul>
                             </li>
                             {% if user.is_active %}

@@ -9,7 +9,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from .models import Board, User, Event, Grades, Application
 from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm
 
-from django.views.generic import View, CreateView, FormView, DetailView
+from django.views.generic import View, CreateView, FormView, DetailView, ListView
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
@@ -200,6 +200,25 @@ class EventDetailView(DetailView):
         context['event'] = event
         
         return context
+class EventManageView(ListView):
+    model = Event
+    template_name = "event/event_manage.html"
+    context_object_name = "event_list"
+    paginate_by = 5 # 한 페이지에 제한할 Object 수
+    paginate_orphans = 0 # 짜투리 처리
+    ordering = "-create_date" # 정렬기준
+    page_kwarg = "page" # 페이징할 argument
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page = context['page_obj']
+        paginator = page.paginator
+        pagelist = paginator.get_elided_page_range(page.number, on_each_side=3, on_ends=0)
+        context['pagelist'] = pagelist
+        return context
+    
+    def get_queryset(self):
+        return Event.objects.order_by("-id")
     
 @login_required(login_url='/reservation/login/')
 def readEvent(request, event_id):
