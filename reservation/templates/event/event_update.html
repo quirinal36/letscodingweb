@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script type="text/javascript">
+var inputElement = document.getElementById("submitButton")
+inputElement.addEventListener("Click", function() {
+    if confirm('입력하신 정보대로 수정하시겠습니까?') {
+        document.getElementById("updateForm").submit()
+    } else {
+        return false;
+    }
+});
+
+$(function () {
+    
+    $(".datetimepicker-input").datepicker({ 
+        lang: "ko",
+        dateFormat: "yy-mm-dd" ,
+        closeText: "닫기",
+        currentText: "오늘",
+        prevText: '이전 달',
+        nextText: '다음 달',
+        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+        weekHeader: "주",
+        yearSuffix: '년'
+    });
+});
+</script>
+<div class="title-style1">
+    <div class="layout-center">
+        <strong>교육 수정</strong>
+    </div>
+</div>
+<div class="layout-center">
+    <div class="form-style1">
+        <form method="post" id="updateForm" onSubmit="if(!confirm('입력한 정보로 저장하시겠습니까?')){return false;}">
+            {% csrf_token %}
+            <div class="box">
+                <ul>
+                    {% for field in form %}
+                        {% if field.html_name == 'start_date' or field.html_name == 'finish_date'%}
+                        <li>
+                            {{field.label}}
+                            {{field}}
+                            {{field.errors}}    
+                        </li>
+                        {% elif field.html_name == 'user'%}
+                            <input type="hidden" name="user" value="{{user.id}}"/>
+                        {% else %}
+                        <li>
+                            {{field.label}}
+                            {{field}}
+                            {{field.errors}}
+                        </li>
+                        {% endif %}
+                    {% endfor%}
+                </ul>
+                
+                <input type="submit" >
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

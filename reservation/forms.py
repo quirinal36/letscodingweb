@@ -109,42 +109,28 @@ class SignUpForm(UserCreationForm):
     
 class EventForm(forms.ModelForm):
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
-    start_date = forms.DateTimeField(
-        input_formats=['%Y/%m/%d'],
-        widget = forms.DateTimeInput(attrs={
-            'class': 'ipt1 form-control datetimepicker-input',
-            'autocomplete' : 'off'
-        })
-    )
-    finish_date = forms.DateTimeField(
-        input_formats=['%Y/%m/%d'],
-        widget = forms.DateTimeInput(attrs={
-            'class': 'form-control datetimepicker-input',
-            'autocomplete' : 'off'
-        })
-    )
-    STAY_CHOICES = (
-        (0, '숙박형'),
-        (1, '무박형')
-    )
-    stay = forms.ChoiceField(choices = STAY_CHOICES)
-    section = forms.CharField()
+    #stay = forms.ChoiceField(choices = Event.STAY_CHOICES)
+    #section = forms.CharField()
     
     class Meta:
         model = Event
-        fields = ('title', 'start_date', 'finish_date', 'stay', 'section')
+        fields = ('title', 'start_date', 'finish_date', 'section', 'stay')
+        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        print(f"init")
         class_update_fields = ['title', 'stay', 'section']
         for field_name in class_update_fields:
             self.fields[field_name].widget.attrs.update({
                 'class': 'ipt1'
             })
         self.fields['start_date'].widget.attrs.update({
-            'class': 'datetimepicker-input ipt1'
+            'class': 'datetimepicker-input ipt1',
+            'autocomplete' : 'off'
         })
         self.fields['finish_date'].widget.attrs.update({
-            'class': 'datetimepicker-input ipt1'
+            'class': 'datetimepicker-input ipt1',
+            'autocomplete' : 'off'
         })
 
 class ApplyForm(forms.ModelForm):

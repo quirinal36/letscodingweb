@@ -2,14 +2,20 @@
     {% load static %}
 {% block content %}
     <div id="containerWrap">
-
-        <p>{{ event.title }}</p>
-        <p>{{ event.start_date }}</p>
-        <p>{{ event.finish_date }}</p>
-        <p>{{ event.section }}</p>
-        <p>
-            {{ event.stay }}
-        </p>
-        <p>{{ event.user.email }}</p>
+        <div class="title-style1">
+            <div class="layout-center">
+                <strong>교육</strong>
+            </div>
+        </div>
+        <div class="layout-center">
+            <p>{{ event.title }}</p>
+            <p>{{ event.start_date }}</p>
+            <p>{{ event.finish_date }}</p>
+            <p>{{ event.section }}</p>
+            <p>
+                {{ event.stay }}
+            </p>
+            <p>{{ event.user.email }}</p>
+        </div>
     </div>
 {% endblock %}

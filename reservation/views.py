@@ -9,9 +9,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from .models import Board, User, Event, Grades, Application
 from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm
 
-from django.views.generic import View, CreateView, FormView, DetailView, ListView
+from django.views.generic import View, CreateView, FormView, DetailView, ListView, UpdateView
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template import loader
 from django.urls import reverse_lazy
@@ -182,12 +182,13 @@ def create(request):
     
     elif request.method == "POST":
         eventForm = EventForm(request.POST)
-
+        print("event create")
         if eventForm.is_valid():
             event = eventForm.save(commit=False)
             event.user = request.user
             event.save()
             return redirect('/reservation/event/detail/'+str(event.id))
+        
 class EventDetailView(DetailView):
     model = Event
     template_name = "event/read.html"
@@ -200,6 +201,7 @@ class EventDetailView(DetailView):
         context['event'] = event
         
         return context
+    
 class EventManageView(ListView):
     model = Event
     template_name = "event/event_manage.html"
@@ -238,6 +240,66 @@ def eventDelete(request, event_id):
     event.delete()
     return redirect("reservation/")
 
+class EventUpdateView(LoginRequiredMixin, UpdateView):
+    model = Event
+    context_object_name = 'event'
+    form_class = EventForm
+    template_name = 'event/event_update.html'
+    login_url = reverse_lazy('reservations:login')
+    def get_success_url(self):
+        #print("get_success_url")
+        return reverse_lazy('reservations:eventDetail', args=(self.object.id,))
+    
+    def has_permission(self, request):
+        #print("has_permission")
+        return request.user.is_active and request.user.is_staff
+    
+    def get_initial(self):
+        #print("get_initial")
+        initial = super(EventUpdateView, self).get_initial()
+        user = self.request.user
+        initial['user'] = user
+        return initial
+        
+    def get_object(self):
+        #print('get_object')
+        event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        return event
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = get_object_or_404(Event, pk=self.kwargs['pk'])
+        context['event'] = event
+        return context
+    
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        
+        # Custom logic before rendering the form
+        context = self.get_context_data()
+        if context['event'].user != request.user:
+            return HttpResponseForbidden("작성자만 글을 수정할 수 있습니다..")
+        
+        return self.render_to_response(context)
+    
+    def post(self, request, *args, **kwargs):
+        if not self.request.user.is_staff :
+            # Only staff users are allowed to perform the POST operation
+            return HttpResponseForbidden("로그인을 해 주세요.")
+        
+        eventForm = EventForm(request.POST)
+        #print("EventUpdateView POST")
+        if eventForm.is_valid():
+            #print("EventUpdateView validated")
+            event = eventForm.save(commit=False)
+            #print("after eventform save")
+            #print(event.user)
+            event.user = request.user
+            #event.save() <<-- 얘가 있으면 수정도 되면서 복제본이 추가됨
+            print(event.user)
+        return super().post(request, *args, **kwargs)
+            
+    
 @staff_member_required
 @login_required(login_url="/reservation/login")
 @require_http_methods({"GET", "POST"})

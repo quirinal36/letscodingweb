@@ -6,7 +6,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.core.mail import send_mail # 👈 "send_mail" import
 from django.utils.html import strip_tags # 👈 "strip_tags" import
 from django.template.loader import render_to_string # 👈 "render_to_string" import
-
+import datetime
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -91,15 +91,34 @@ class Board(models.Model) :
     create_date =models.DateTimeField(auto_now_add=True)
     
 class Event(models.Model):
+    STAY_CHOICES = (
+        (0, '숙박형'),
+        (1, '무박형')
+    )
     title = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    stay = models.PositiveIntegerField(default = 0)
+    stay = models.PositiveIntegerField(
+        default = 0,
+        choices = STAY_CHOICES
+        )
     section = models.CharField(max_length=200, default='')
     start_date = models.DateField(auto_now=False, auto_now_add=False)
     finish_date = models.DateField(auto_now=False, auto_now_add=False)
     create_date =models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
-        
+    period = models.PositiveIntegerField(default= 1)
+    
+    def save(self,*args, **kwargs):
+        self.period = 0
+        day = self.start_date
+        while day <= self.finish_date :
+            if day.weekday() < 5 :
+                self.period += 1
+            day = day + datetime.timedelta(days=1)
+            #print(f"day in Event save:{day}")
+            
+        super(Event,self).save(*args, **kwargs)
+     
 class Grades(models.Model):
     grade = models.PositiveIntegerField(default = 0)
     tgrade = models.CharField(max_length=200)
