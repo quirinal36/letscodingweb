@@ -10,12 +10,12 @@ app_name="reservations"
 event_patterns = [
     path("apply/", views.ApplyView.as_view(), name="apply"),
     path("apply/<int:event_id>", views.ApplyView.as_view(), name="applyForm"),
-    path("", views.event, name="event"),
+    path("", views.EventListView.as_view(), name="event"),
     path("manage/", views.EventManageView.as_view(), name="eventManage"),
     path("detail/<int:pk>", views.EventDetailView.as_view(), name="eventDetail"),
     path("create/", views.create, name="eventCreate"),
     path("update/<int:pk>", views.EventUpdateView.as_view(), name="eventUpdate"),
-    path("delete/<int:pk>", views.delete, name="eventDelete"),
+    path("delete/<int:pk>", views.eventDelete, name="eventDelete"),
     path("apply/detail/<int:apply_id>/", views.applyDetail, name="applyDetail"),
 ]
 urlpatterns = [

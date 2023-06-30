@@ -30,39 +30,41 @@ $(function () {
     });
 });
 </script>
-<div class="title-style1">
-    <div class="layout-center">
-        <strong>교육 수정</strong>
+<div id="containerWrap">
+    <div class="title-style1">
+        <div class="layout-center">
+            <strong>교육 수정</strong>
+        </div>
     </div>
-</div>
-<div class="layout-center">
-    <div class="form-style1">
-        <form method="post" id="updateForm" onSubmit="if(!confirm('입력한 정보로 저장하시겠습니까?')){return false;}">
-            {% csrf_token %}
-            <div class="box">
-                <ul>
-                    {% for field in form %}
-                        {% if field.html_name == 'start_date' or field.html_name == 'finish_date'%}
-                        <li>
-                            {{field.label}}
-                            {{field}}
-                            {{field.errors}}    
-                        </li>
-                        {% elif field.html_name == 'user'%}
-                            <input type="hidden" name="user" value="{{user.id}}"/>
-                        {% else %}
-                        <li>
-                            {{field.label}}
-                            {{field}}
-                            {{field.errors}}
-                        </li>
-                        {% endif %}
-                    {% endfor%}
-                </ul>
-                
-                <input type="submit" >
-            </div>
-        </form>
+    <div class="layout-center">
+        <div class="form-style1">
+            <form method="post" id="updateForm" onSubmit="if(!confirm('입력한 정보로 저장하시겠습니까?')){return false;}">
+                {% csrf_token %}
+                <div class="box">
+                    <ul>
+                        {% for field in form %}
+                            {% if field.html_name == 'start_date' or field.html_name == 'finish_date'%}
+                            <li>
+                                {{field.label}}
+                                {{field}}
+                                {{field.errors}}    
+                            </li>
+                            {% elif field.html_name == 'user'%}
+                                <input type="hidden" name="user" value="{{user.id}}"/>
+                            {% else %}
+                            <li>
+                                {{field.label}}
+                                {{field}}
+                                {{field.errors}}
+                            </li>
+                            {% endif %}
+                        {% endfor%}
+                    </ul>
+                    
+                    <input type="submit" >
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

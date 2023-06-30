@@ -17,6 +17,7 @@ from django.template import loader
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods, require_POST
 from django.core.paginator import Paginator
+import json
 
 def index(request):
     board_list = Board.objects.order_by("id")
@@ -35,26 +36,33 @@ class LoginView(View):
     
     def get(self, request):
         form = self.form_class()
+        
         #message = ''
         return render(request, 
                       self.template_name, 
-                      context={'form': form, 'message':messages})
+                      context={
+                          'form': form, 
+                          'message':messages,
+                          'next': request.GET.get('next')})
     def post(self, request):
         #print("Login Post")
         form = self.form_class(request.POST)
         #print(list(request.POST.items()))
         
         if form.is_valid():
-            print("Login Form Valid")
+            #print("Login Form Valid")
             cleaned_data = form.clean()
             email = cleaned_data.get("email")
             password = cleaned_data.get('password')
-            print(f"email:{email}, password:{password}")
+            #print(f"email:{email}, password:{password}")
             
             user = authenticate(email=email, password=password)
-            print(user)
+            #print(user)
             if user is not None:
                 login(self.request, user)
+                if 'next' in request.POST and request.POST.get('next') != 'None':
+                    print(f"request.POST.get('next'):{request.POST.get('next')}")
+                    return redirect(request.POST.get('next'))
                 return redirect('reservations:index')
         
             messages.error(self.request, '로그인에 실패하였습니다.', extra_tags='danger')
@@ -202,7 +210,7 @@ class EventDetailView(DetailView):
         
         return context
     
-class EventManageView(ListView):
+class EventManageView(LoginRequiredMixin, ListView):
     model = Event
     template_name = "event/event_manage.html"
     context_object_name = "event_list"
@@ -210,6 +218,7 @@ class EventManageView(ListView):
     paginate_orphans = 0 # 짜투리 처리
     ordering = "-create_date" # 정렬기준
     page_kwarg = "page" # 페이징할 argument
+    login_url = reverse_lazy('reservations:login')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -233,12 +242,17 @@ def readEvent(request, event_id):
     
 @staff_member_required
 @login_required(login_url="/reservation/login")
-def eventDelete(request, event_id):
-    event = Event.objects.get(id = event_id)
+def eventDelete(request, pk):
+    event = Event.objects.get(id = pk)
+    response_data = {}
     if request.user != event.user:
-        return redirect("/reservation/")
-    event.delete()
-    return redirect("reservation/")
+        response_data['result'] = 'error'
+        response_data['message'] = '작성자만 글을 삭제할 수 있습니다.'
+    else :
+        event.delete()
+        response_data['result'] = 'success'
+        response_data['message'] = '글이 삭제되었습니다.'
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 class EventUpdateView(LoginRequiredMixin, UpdateView):
     model = Event
@@ -321,6 +335,26 @@ def eventUpdate(request, event_id):
             
         return redirect('/reservation/event/detail/'+str(event.id))
     
+class EventListView(ListView)    :
+    model = Event
+    template_name = "event/list.html"
+    context_object_name = "event_list"
+    paginate_by = 5 # 한 페이지에 제한할 Object 수
+    paginate_orphans = 0 # 짜투리 처리
+    ordering = "-create_date" # 정렬기준
+    page_kwarg = "page" # 페이징할 argument
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page = context['page_obj']
+        paginator = page.paginator
+        pagelist = paginator.get_elided_page_range(page.number, on_each_side=3, on_ends=0)
+        context['pagelist'] = pagelist
+        return context
+    
+    def get_queryset(self):
+        return Event.objects.order_by("-id")
+    
 def event(request):
     event_list = Event.objects.order_by("id")
     context = {"event_list": event_list}
@@ -341,9 +375,9 @@ def calendar(request):
 # @login_required(login_url="/reservation/login")
 def applyList(request):
     my_apply_list = Application.objects.filter(user_id = request.user).order_by("-id")
-    print(f"list length : {len(my_apply_list)}")
+    #print(f"list length : {len(my_apply_list)}")
     
-    context = {"list": my_apply_list}
+    #context = {"list": my_apply_list}
     return render(request, "program/apply-list.html", context)
 
 # @login_required(login_url="/reservation/login")
@@ -361,7 +395,7 @@ def applyFormView(request, event_id):
     })
 
 # @login_required(login_url='/reservation/login/')
-class ApplyView(LoginRequiredMixin, CreateView):
+class ApplyView(CreateView):
     model = Application
     form_class = ApplyForm
     template_name = 'program/apply.html'
@@ -401,10 +435,8 @@ class ApplyView(LoginRequiredMixin, CreateView):
             return HttpResponseRedirect(reverse_lazy('reservations:applyList'))
         return super(ApplyView, self).get(request, *args, **kwargs)
             
-    
+    """
     def form_valid(self, form):
-        
-        """
         if request.method == 'POST':
             applyForm = ApplyForm(request.POST)
             print('applyForm post')

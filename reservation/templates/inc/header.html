@@ -27,33 +27,10 @@
                             <div>
                                 <li><a href="{% url 'reservations:event' %}">교육신청</a></li>
                                 <li><a href="{% url 'reservations:applyList' %}">조회</a></li>
-                                {% if user.is_staff %}
-                                    <li><a href="{% url 'reservations:eventManage' %}">교육관리</a></li>
-                                {% endif %}
+                                
                             </div>
                         </ul>
                     </li>
-                    {% if user.is_active %}
-                    <li>                        
-                        <a href="#">{{user.email}}</a>
-                        <ul class="dep2">
-                            <div>
-                                {% if user.is_staff%}
-                                <li>
-                                    관리자
-                                </li>
-                                {% endif %}
-                                <li>
-                                    <a href="{% url 'reservations:logout' %}">logout</a>
-                                </li>
-                            </div>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li>                        
-                        <a href="{% url 'reservations:login' %}">로그인</a>
-                    </li>
-                    {% endif %}
                 </ul>
             </nav>
         </div>
@@ -85,32 +62,8 @@
                                 <ul class="dep2">
                                     <li><a href="{% url 'reservations:event' %}">교육신청</a></li>
                                     <li><a href="{% url 'reservations:applyList' %}">조회</a></li>
-                                    {% if user.is_staff %}
-                                        <li><a href="{% url 'reservations:eventManage' %}">교육관리</a></li>
-                                    {% endif %}
                                 </ul>
                             </li>
-                            {% if user.is_active %}
-                                <li>                        
-                                    <a href="#">{{user.email}}</a>
-                                    <ul class="dep2">
-                                        <div>
-                                            {% if user.is_staff%}
-                                            <li>
-                                                관리자
-                                            </li>
-                                            {% endif %}
-                                            <li>
-                                                <a href="{% url 'reservations:logout' %}">logout</a>
-                                            </li>
-                                        </div>
-                                    </ul>
-                                </li>
-                                {% else %}
-                                <li>                        
-                                    <a href="{% url 'reservations:login' %}">로그인</a>
-                                </li>
-                                {% endif %}
                         </ul>
                     </div>
                 </div>
