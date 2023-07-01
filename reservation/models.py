@@ -6,26 +6,30 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.core.mail import send_mail # 👈 "send_mail" import
 from django.utils.html import strip_tags # 👈 "strip_tags" import
 from django.template.loader import render_to_string # 👈 "render_to_string" import
+from phonenumber_field.modelfields import PhoneNumberField
+from django.utils.timezone import now
+from django.core.validators import RegexValidator
+
 import datetime
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, email, password, **extra_fields):
-        if not email:
-            raise ValueError('Users require an email field')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+    def _create_user(self, phone_number, password, **extra_fields):
+        if not phone_number:
+            raise ValueError('Users require an phone_number field')
+        #phone = self.phone
+        user = self.model(phone_number=phone_number, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, phone_number, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
-
-    def create_superuser(self, email, password, **extra_fields):
+        return self._create_user(phone_number, password, **extra_fields)
+    
+    def create_superuser(self, phone_number, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -34,9 +38,10 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(email, password, **extra_fields)
+        return self._create_user(phone_number, password, **extra_fields)
     
 class User(AbstractUser):
+    # phoneNumberRegex = RegexValidator(regex = r"^\+?1?\d{8,15}$")
     """
     GENDER_MALE = "male"
     GENDER_FEMALE = "female"
@@ -53,16 +58,21 @@ class User(AbstractUser):
     birthdate = models.DateField(null=True)
     """
     username = None
-    email = models.EmailField(unique=True)
+    #email = models.EmailField(unique=True)
     object = UserManager()
     
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
-    
+    # validators = [phoneNumberRegex]
+    phone_number = PhoneNumberField(unique=True, blank=False)
     name = models.CharField(max_length=120, default="", blank=True)
-    email_verified = models.BooleanField(default=False)  # 👈 인증여부(True, False)
-    email_secret = models.CharField(max_length=120, default="", blank=True)  # 👈 uuid를 사용하여 난수 임시 저장
+    #email_verified = models.BooleanField(default=False)  # 👈 인증여부(True, False)
+    #email_secret = models.CharField(max_length=120, default="", blank=True)  # 👈 uuid를 사용하여 난수 임시 저장
     school = models.CharField(max_length=120, default="", blank=True)
+    create_date =models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField('last login', blank=True, null=True)
+    
+    """
     def verify_email(self): # 👈 회원가입 시, email을 인증을 위한 매서드입니다.
         if self.email_verified is False:
             secret = uuid.uuid4().hex[:20] # 👈 random key 생성
@@ -81,32 +91,36 @@ class User(AbstractUser):
             )
             self.save() # 👈 저장(save매서드를 통해 필드의 값을 저장합니다.)
         return
+    """
     def __str__(self):
-        return f"name:{self.name}, email:{self.email}, password:{self.password}, school:{self.school}"
+        return f"name:{self.name}, phone_number:{self.phone_number}, password:{self.password}, school:{self.school}"
 # Create your models here.
 class Board(models.Model) :
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     contents = models.TextField()
     create_date =models.DateTimeField(auto_now_add=True)
+
+class Program(models.Model):
+    title = models.CharField(max_length=100)
     
 class Event(models.Model):
-    STAY_CHOICES = (
-        (0, '숙박형'),
-        (1, '무박형')
-    )
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    stay = models.PositiveIntegerField(
-        default = 0,
-        choices = STAY_CHOICES
-        )
-    section = models.CharField(max_length=200, default='')
-    start_date = models.DateField(auto_now=False, auto_now_add=False)
-    finish_date = models.DateField(auto_now=False, auto_now_add=False)
+    
+    #section = models.CharField(max_length=200, default='')
+    start_date = models.DateField(verbose_name="시작날짜", auto_now=False, auto_now_add=False)
+    finish_date = models.DateField(verbose_name="종료날짜", auto_now=False, auto_now_add=False)
     create_date =models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
     period = models.PositiveIntegerField(default= 1)
+    num = models.PositiveIntegerField(default= 1) 
+    deadline = models.DateTimeField(verbose_name="접수마감", auto_now_add=False, blank=False)
+    apply_start = models.DateTimeField(verbose_name="접수시작", auto_now_add=False, blank=False)
+    
+    def get_fields(self):
+        return[(field.verbose_name, field.value_from_object(self)) for field in self.__class__._meta.fields]
     
     def save(self,*args, **kwargs):
         self.period = 0
@@ -124,10 +138,14 @@ class Grades(models.Model):
     tgrade = models.CharField(max_length=200)
     
 class Application(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    phone_number = PhoneNumberField(verbose_name="전화번호",blank=False)
+    password = models.CharField(verbose_name="비밀번호",max_length=50)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     grade = models.ForeignKey(Grades, on_delete=models.CASCADE)
-    students = models.IntegerField()
+    school = models.CharField(verbose_name="학교",max_length=50)
+    students = models.IntegerField(verbose_name="인원",)
+    numOfClasses = models.PositiveIntegerField(verbose_name="학급수",default = 1)
     create_date =models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
-    confirm = models.IntegerField(default = 0)
+    

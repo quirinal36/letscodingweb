@@ -32,6 +32,14 @@
             {% csrf_token %}
             <div class="box">
                 <ul>
+                    <label for="programs">프로그램</label>
+                    <li>
+                        <select name="program" id="programs">
+                            {% for program in programs %}
+                                <option value="{{program.id}}">{{program.title}}</option>
+                            {% endfor %}
+                        </select>
+                    </li>
                     {{eventForm.as_ul}}
                 </ul>
                 <input type="submit">

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_dump_load_utf8',
     'bootstrap5',
+    "phonenumber_field",
 ]
 
 MIDDLEWARE = [
@@ -159,4 +160,6 @@ EMAIL_FROM = os.environ.get("RECIPIENT_ADDRESS")
 
 AUTH_USER_MODEL = "reservation.User"
 
-AUTHENTICATION_BACKENDS = ['reservation.backends.EmailBackend']
+AUTHENTICATION_BACKENDS = ['reservation.backends.PhoneBackend']
+ACCOUNT_AUTHENTICATION_METHOD = 'phone_number'
+ACCOUNT_USERNAME_REQUIRED = False

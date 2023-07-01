@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <div id="containerWrap">
+        <div class="title-style1">
+            <div class="layout-center">
+                <strong>교육 신청</strong>
+            </div>
+        </div>
+        <div class="layout-center">
+            <div class="form-style1">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="bt-wrap">
+                        <input type="submit" value="신청" class="bt1 on">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

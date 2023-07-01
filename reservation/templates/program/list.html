@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <div id="containerWrap">
+        <div class="title-style1">
+            <div class="layout-center">
+                <strong>프로그램 리스트</strong>
+            </div>
+        </div>
+        <div class="layout-center">
+            <div class="tbl-wrap scroll">
+                
+                    {% for p in program_list %}
+                    <div>
+                        {{ p.title }}
+                    </div>
+                    {% endfor %}
+                
+                <a href="{% url 'reservations:programCreate'%} ">추가하기</a>
+            </div>            
+        </div>
+    </div>    
+{% endblock %}    

@@ -6,8 +6,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
-from .models import Board, User, Event, Grades, Application
-from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm
+from .models import Board, User, Event, Grades, Application, Program
+from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm, ProgramForm
 
 from django.views.generic import View, CreateView, FormView, DetailView, ListView, UpdateView
 
@@ -47,16 +47,16 @@ class LoginView(View):
     def post(self, request):
         #print("Login Post")
         form = self.form_class(request.POST)
-        #print(list(request.POST.items()))
+        print(list(request.POST.items()))
         
         if form.is_valid():
-            #print("Login Form Valid")
+            print("Login Form Valid")
             cleaned_data = form.clean()
-            email = cleaned_data.get("email")
+            phone_number = cleaned_data.get("phone_number")
             password = cleaned_data.get('password')
-            #print(f"email:{email}, password:{password}")
+            print(f"phone_number:{phone_number}, password:{password}")
             
-            user = authenticate(email=email, password=password)
+            user = authenticate(phone_number=phone_number, password=password)
             #print(user)
             if user is not None:
                 login(self.request, user)
@@ -65,8 +65,8 @@ class LoginView(View):
                     return redirect(request.POST.get('next'))
                 return redirect('reservations:index')
         
-            messages.error(self.request, '로그인에 실패하였습니다.', extra_tags='danger')
-            context = {'form': form, 'message': messages}
+        messages.error(self.request, '로그인에 실패하였습니다.', extra_tags='danger')
+        context = {'form': form, 'message': messages}
         return render(request, 
                       self.template_name, 
                       context=context)
@@ -183,7 +183,8 @@ def create(request):
     if request.method == "GET":
         if request.user.is_authenticated:
             eventForm = EventForm(initial={'user':request.user})
-            context = {'eventForm':eventForm}
+            programs = Program.objects.order_by("id")
+            context = {'eventForm':eventForm, "programs":programs}
             return render(request, 'event/create.html', context)
         else:
             return HttpResponseRedirect(reverse('login'))
@@ -191,8 +192,14 @@ def create(request):
     elif request.method == "POST":
         eventForm = EventForm(request.POST)
         print("event create")
+        print(list(request.POST.items()))
+        
+        
         if eventForm.is_valid():
+            print("eventForm.is_valid()")
+            program = Program.objects.get(id=request.POST['program'])
             event = eventForm.save(commit=False)
+            event.program = program
             event.user = request.user
             event.save()
             return redirect('/reservation/event/detail/'+str(event.id))
@@ -456,3 +463,26 @@ def applyDetail(request, apply_id):
         "application": application,
         "error_message":"You didn't select a choice."
     })
+    
+class ProgramListView(ListView):
+    model = Program
+    context_object_name = 'program_list'
+    template_name='program/list.html'
+
+
+class ProgramCreateView(CreateView):
+    model = Program
+    template_name = "program/create.html"
+    form_class = ProgramForm
+
+    def get_success_url(self):
+        return reverse_lazy("reservations:program")
+    
+
+class ProgramUpdateView(UpdateView):
+    model = Program
+    form_class = ProgramForm
+    template_name = "program/create.html"
+    
+    def get_success_url(self):
+        return reverse_lazy("reservations:program")
