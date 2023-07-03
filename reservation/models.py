@@ -93,7 +93,7 @@ class User(AbstractUser):
         return
     """
     def __str__(self):
-        return f"name:{self.name}, phone_number:{self.phone_number}, password:{self.password}, school:{self.school}"
+        return f"(name:{self.name}, phone_number:{self.phone_number}, password:{self.password}, school:{self.school})"
 # Create your models here.
 class Board(models.Model) :
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -103,6 +103,9 @@ class Board(models.Model) :
 
 class Program(models.Model):
     title = models.CharField(max_length=100)
+    def __str__(self):
+        return f"(title:{self.title})"
+    
     
 class Event(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
@@ -132,6 +135,8 @@ class Event(models.Model):
             #print(f"day in Event save:{day}")
             
         super(Event,self).save(*args, **kwargs)
+    def __str__(self):
+         return f"(title:{self.title}, program:{self.program})"
      
 class Grades(models.Model):
     grade = models.PositiveIntegerField(default = 0)
@@ -148,4 +153,7 @@ class Application(models.Model):
     numOfClasses = models.PositiveIntegerField(verbose_name="학급수",default = 1)
     create_date =models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"phone_number:{self.phone_number}, event_id:{self.event.id}, event:{self.event}"
     

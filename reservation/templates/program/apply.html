@@ -12,6 +12,13 @@
                 <form method="POST" action="{% url 'reservations:apply' %}">
                     {% csrf_token %}
                     <div class="box">
+
+                        <dl>
+                            <dt>교육명</dt>
+                            <dd>
+                                {{event.program.title}} 
+                            </dd>
+                        </dl>
                         <dl>
                             <dt>교육기간</dt>
                             <dd>
@@ -29,65 +36,73 @@
                                 {{event.deadline | date:'Y년-m월-d일'}}
                             </dd>
                         </dl>
+                        {% comment %}
                         <dl>
                             <dt>학교명 *</dt>
                             <dd>
                                 {{ form.school }}
-                                <p class="guide">{{form.school.label}}을 입력하세요.</p>
+                                {{ form.school.errors }}
                             </dd>
                         </dl>
                         <dl>
                             <dt>학년 *</dt>
                             <dd>
                                 <select name="grade_id">
-                                {% for g in grades %}
-                                    <option value="{{g.grade}}">{{g.tgrade}}</option>
-                                {% endfor %}
+                                    {% for g in grades %}
+                                        <option value="{{g.grade}}">{{g.tgrade}}</option>
+                                    {% endfor %}
                                 </select>
-                                
-                                <p class="guide">학년을 입력하세요.</p>
                             </dd>
                         </dl>
                         <dl>
                             <dt>인원 *</dt>
                             <dd>
-                                {% comment %}
-                                <input type="text" placeholder="25" class="ipt1 short">
-                                {% endcomment %}
+                                
                                 {{ form.students }}
                                 <span>명</span>
-                                <p class="guide">{{form.students.label}}을 입력하세요.</p>
+                                {{form.students.errors}}
                             </dd>
                         </dl>
                         <dl>
                             <dt>학급수</dt>
                             <dd>
-                                {% comment %}
-                                <input type="text" placeholder="25" class="ipt1 short">
-                                {% endcomment %}
+                                
                                 {{ form.numOfClasses }}
                                 <span>반</span>
-                                <p class="guide">{{form.numOfClasses.label}}를 입력하세요.</p>
+                                {{form.numOfClasses.errors}}
                             </dd>
                         </dl>
                         <dl>
                             <dt>전화번호 *</dt>
                             <dd>
                                 {{form.phone_number}}
-                                
-                                <p class="guide">비밀번호가 일치하지 않습니다.</p>
+                                {{form.phone_number.errors}}
+                                {% if form.phone_number.help_text %}
+                                    <p class="help">
+                                        {{form.phone_number.help_text | safe}}
+                                    </p>
+                                {% endif %}
                             </dd>
                         </dl>
                         <dl>
                             <dt>비밀번호 *</dt>
-                            <dd>
-                                {{form.password.errors}}
+                            <dd>                                
                                 {{form.password}}
-                                
-                                
+                                {{form.password.errors}}                                
                             </dd>
                         </dl>
+                        <input type="hidden" value="{{event.id}}" name="event_id"/>
                         
+                        <label for="events">학년</label>
+                        <li>
+                            <select id="grades">
+                                {% for grade in grades %}
+                                    <option value="{{grade.id}}">{{grade.tgrade}}</option>
+                                {% endfor %}
+                            </select>
+                        </li>
+                        {% endcomment %}
+                        {{form.as_ul}}
                     </div>
                     <div class="bt-wrap">
                         <input type="hidden" value="{{event.id}}" name="event_id"/>

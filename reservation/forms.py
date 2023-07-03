@@ -1,8 +1,9 @@
 from django import forms
 
-from .models import Board, User, Event, Application, Program
+from .models import Board, User, Event, Application, Program, Grades
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from phonenumber_field.formfields import PhoneNumberField
+from django.forms import ModelChoiceField
 
 class PrettyAuthenticationForm(forms.Form):
     """
@@ -151,18 +152,32 @@ class EventForm(forms.ModelForm):
             'class': 'datetimepicker-input ipt1',
             'autocomplete' : 'off'
         })
-
+        
+class GradeModelChoiceField(ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.tgrade
 class ApplyForm(forms.ModelForm):
-    phone = PhoneNumberField(region="KR")
-    password = forms.CharField(max_length=50, widget=forms.PasswordInput)
+    phone_number = PhoneNumberField(
+        label = '전화번호',
+        required = True,
+        widget=forms.TextInput(attrs={'placeholder':'전화번호를 입력하세요.'}),
+        region="KR")
+    password = forms.CharField(
+        max_length=50, 
+        widget=forms.PasswordInput(attrs={'placeholder':'비밀번호를 입력하세요.'})
+    )
+    grades = GradeModelChoiceField(
+        queryset = Grades.objects.all(),
+        to_field_name="id",
+        required=True)
     
     class Meta:
         model = Application
-        fields = ('school', 'grade', 'students', 'numOfClasses', 'phone_number', 'password')
+        fields = ('school', 'students', 'grades', 'numOfClasses', 'phone_number', 'password')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        class_update_fields = ['school', 'grade', 'students', 'numOfClasses', 'phone_number', 'password']
+        class_update_fields = ['school', 'students', 'grades', 'numOfClasses', 'phone_number', 'password']
         for field_name in class_update_fields:
             self.fields[field_name].widget.attrs.update({
                 'class': 'ipt1'

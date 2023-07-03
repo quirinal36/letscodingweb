@@ -379,12 +379,50 @@ def eventDetail(request, event_id):
 def calendar(request):
     return render(request, "program/calendar.html", None)
 
+class ApplyListView(ListView):
+    model = Application
+    template_name = "program/apply-list.html"
+    context_object_name = "apply_list"
+    paginate_by = 5 # 한 페이지에 제한할 Object 수
+    paginate_orphans = 0 # 짜투리 처리
+    ordering = "-create_date" # 정렬기준
+    page_kwarg = "page" # 페이징할 argument
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super(ApplyListView, self).get_context_data(**kwargs)
+        page = context['page_obj']
+        paginator = page.paginator
+        pagelist = paginator.get_elided_page_range(page.number, on_each_side=3, on_ends=0)
+        context['pagelist'] = pagelist
+        context['form'] = ApplyForm()
+        
+        return context
+    
+    def get_queryset(self):
+        return Application.objects.order_by("-id")
+    
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        if "phone_number" in request.GET :
+            phone_param = request.GET["phone_number"]
+            print(f"phone_param:{phone_param}")
+            self.object_list = Application.objects.filter(phone_number__icontains =phone_param)
+        
+        context = self.get_context_data()
+        return self.render_to_response(context)
+    
 # @login_required(login_url="/reservation/login")
 def applyList(request):
-    my_apply_list = Application.objects.filter(user_id = request.user).order_by("-id")
-    #print(f"list length : {len(my_apply_list)}")
+    my_apply_list = Application.objects.order_by("-id")
+    if "phone_number" in request.GET :
+        phone_param = request.GET["phone_number"]
+        my_apply_list = Application.objects.filter(phone_number__icontains =phone_param)
     
-    #context = {"list": my_apply_list}
+    for apply in my_apply_list:
+        print(f"phone_number:{apply.phone_number}")
+        
+    context = {"list": my_apply_list}
     return render(request, "program/apply-list.html", context)
 
 # @login_required(login_url="/reservation/login")
@@ -427,16 +465,17 @@ class ApplyView(CreateView):
         
         print(list(request.POST.items()))
         if form.is_valid():
-            application = Application()
-            application.user = request.user
+            print("form is valid")
+            
+            
+            application = form.save(commit=False)
+            print("form saved")
             event_id = request.POST['event_id']
             event = Event.objects.get(id=event_id)
             application.event = event
-            grade_id = request.POST['grade_id']
+            grade_id = request.POST['grades']
             grade = Grades.objects.get(id=grade_id)
             application.grade = grade
-            students = request.POST['students']
-            application.students = students
             
             application.save()
             return HttpResponseRedirect(reverse_lazy('reservations:applyList'))
