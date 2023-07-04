@@ -18,6 +18,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods, require_POST
 from django.core.paginator import Paginator
 import json
+from django.core import validators
 
 def index(request):
     board_list = Board.objects.order_by("id")
@@ -406,12 +407,31 @@ class ApplyListView(ListView):
         self.object_list = self.get_queryset()
         if "phone_number" in request.GET :
             phone_param = request.GET["phone_number"]
-            print(f"phone_param:{phone_param}")
-            self.object_list = Application.objects.filter(phone_number__icontains =phone_param)
+            phone_param = self.format_phone_number(phone_param)
+            # print(f"phone_param:{phone_param}")
+            self.object_list = Application.objects.filter(phone_number__icontains = phone_param)
         
         context = self.get_context_data()
         return self.render_to_response(context)
-    
+    def format_phone_number(self, input_string):
+        if len(input_string) == 10:
+            # Assuming the input string has the format "0101111222"
+            area_code = input_string[:3]
+            first_part = input_string[3:6]
+            second_part = input_string[6:]
+            formatted_number = f"{area_code}-{first_part}-{second_part}"
+            return formatted_number
+        elif len(input_string) == 11:
+            # Assuming the input string has the format "01011112222"
+            #country_code = input_string[:2]
+            area_code = input_string[:3]
+            first_part = input_string[3:7]
+            second_part = input_string[7:]
+            formatted_number = f"{area_code}-{first_part}-{second_part}"
+            return formatted_number
+        else:
+            return input_string
+        
 # @login_required(login_url="/reservation/login")
 def applyList(request):
     my_apply_list = Application.objects.order_by("-id")
@@ -448,6 +468,7 @@ class ApplyView(CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
         event = get_object_or_404(Event, pk=self.kwargs['event_id'])
         grades = Grades.objects.order_by("id")
         context['grades'] = grades
@@ -466,10 +487,9 @@ class ApplyView(CreateView):
         print(list(request.POST.items()))
         if form.is_valid():
             print("form is valid")
-            
-            
             application = form.save(commit=False)
             print("form saved")
+            
             event_id = request.POST['event_id']
             event = Event.objects.get(id=event_id)
             application.event = event
@@ -477,9 +497,19 @@ class ApplyView(CreateView):
             grade = Grades.objects.get(id=grade_id)
             application.grade = grade
             
+            phone_number = application.phone_number
+            print(f"phone_number:{phone_number}")
+            
             application.save()
             return HttpResponseRedirect(reverse_lazy('reservations:applyList'))
-        return super(ApplyView, self).get(request, *args, **kwargs)
+        messages.error(self.request, '교육신청에 실패하였습니다.', extra_tags='danger')
+        context = {
+            'event': Event.objects.get(id=request.POST['event_id']),
+            'form': form, 
+            'message': messages
+            }
+        return render(request, self.template_name, context)
+    #super(ApplyView, self).get(request, *args, **kwargs)
             
     """
     def form_valid(self, form):

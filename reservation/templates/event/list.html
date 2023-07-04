@@ -48,9 +48,11 @@
                     </form>
                 </div>
             </div>
+            {% comment %}
             <div class="bt-wrap">
                 <a href="#" onclick="javascript:alert('선택된 항목이 없습니다.');" class="bt1">신청 취소</a>
             </div>
+            {% endcomment %}
             <p class="text-center">
                 <h5>
                     {% if page_obj.has_previous %}

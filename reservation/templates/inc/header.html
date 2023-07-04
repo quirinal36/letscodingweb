@@ -22,7 +22,7 @@
                     <li><a href="#">체험처 소개</a></li>
                     <li><a href="#">공유학교 A to Z</a></li>
                     <li>
-                        <a href="{% url 'reservations:calendar' %}">교육신청/조회</a>
+                        <a href="{% url 'reservations:event' %}">교육신청/조회</a>
                         <ul class="dep2">
                             <div>
                                 <li><a href="{% url 'reservations:event' %}">교육신청</a></li>
@@ -58,7 +58,7 @@
                             <li><a href="#">체험처 소개</a></li>
                             <li><a href="#">공유학교 A to Z</a></li>
                             <li>
-                                <a href="#:;">교육신청/조회</a>
+                                <a href="{% url 'reservations:event' %}">교육신청/조회</a>
                                 <ul class="dep2">
                                     <li><a href="{% url 'reservations:event' %}">교육신청</a></li>
                                     <li><a href="{% url 'reservations:applyList' %}">조회</a></li>
