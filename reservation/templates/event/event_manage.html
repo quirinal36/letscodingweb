@@ -17,6 +17,7 @@
                                 <th>접수기간</th>
                                 <th>교육명</th>
                                 <th>운영일수</th>
+                                <th>모집인원</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -40,6 +41,7 @@
                                     </a>
                                 </td>
                                 <td>{{item.period}}</td>
+                                <td>{{item.capacity}}</td>
                                 <td>
                                     {% if item.user == request.user %}
                                     <a href="{% url 'reservations:eventUpdate' item.id %}">

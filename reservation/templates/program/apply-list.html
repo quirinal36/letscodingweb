@@ -23,6 +23,7 @@
                                     <th>기간</th>
                                     <th>신청인원</th>
                                     <th>운영일수</th>
+                                    <th>신청일시</th>
                                     <th>확정 유/무</th>
                                     <th>신청취소</th>
                                 </tr>
@@ -40,21 +41,41 @@
                                     </td>
                                     <td>{{application.students}}명</td>
                                     <td>{{application.event.period}}</td>
-                                    <td>미확정</td>
                                     <td>
-                                        
+                                        {{application.create_date}}
+                                    </td>
+                                    <td>
+                                        {% if application.confirmed %}
+                                            확정
+                                        {% else %}
+                                            미확정
+                                        {% endif %}
+                                        <p>
+                                            <a href="{% url 'reservations:applicationConfirm' application.id %}">
+                                                {% if user.is_authenticated and application.confirmed == False%}
+                                                    확정처리
+                                                {% elif user.is_authenticated %}
+                                                    확정취소
+                                                {% endif %}
+                                            </a>
+                                        </p>
+                                    </td>
+
+                                    <td>
+                                        <a href="">취소하기</a>
                                     </td>
                                 </tr>
                                 {% endfor %}
-                                
                             </tbody>
                         </table>
                     </form>
                 </div>
             </div>
+            {% comment %}
             <div class="bt-wrap">
                 <a href="#" onclick="javascript:alert('선택된 항목이 없습니다.');" class="bt1">신청 취소</a>
             </div>
+            {% endcomment %}
         </div>
     </div>    
 {% endblock %}    

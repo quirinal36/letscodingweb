@@ -7,6 +7,10 @@ from .forms import PrettyAuthenticationForm
 
 app_name="reservations"
 
+application_patterns = [
+    path("confirm/<int:pk>", views.applicationConfirm, name="applicationConfirm"),
+    path("cancel/<int:pk>", views.applicationCancel, name="applicationCancel"),
+]
 program_patterns = [
     path("", views.ProgramListView.as_view(), name="program"),
     path("create", views.ProgramCreateView.as_view(), name="programCreate"),
@@ -41,6 +45,7 @@ urlpatterns = [
     path("applyList/", views.ApplyListView.as_view(), name="applyList"),
     path("event/", include(event_patterns)),
     path("program/", include(program_patterns)),
+    path("application/", include(application_patterns)),
 ]
 
 

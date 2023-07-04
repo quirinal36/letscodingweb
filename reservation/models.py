@@ -121,6 +121,7 @@ class Event(models.Model):
     num = models.PositiveIntegerField(default= 1) 
     deadline = models.DateTimeField(verbose_name="접수마감", auto_now_add=False, blank=False)
     apply_start = models.DateTimeField(verbose_name="접수시작", auto_now_add=False, blank=False)
+    capacity = models.PositiveIntegerField(verbose_name="모집인원", default=1)
     
     def get_fields(self):
         return[(field.verbose_name, field.value_from_object(self)) for field in self.__class__._meta.fields]
@@ -153,6 +154,7 @@ class Application(models.Model):
     numOfClasses = models.PositiveIntegerField(verbose_name="학급수",default = 1)
     create_date =models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
+    confirmed = models.BooleanField(default = False)
     
     def __str__(self):
         return f"phone_number:{self.phone_number}, event_id:{self.event.id}, event:{self.event}"

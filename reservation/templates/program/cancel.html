@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <div id="containerWrap">
+        <div class="title-style1">
+            <div class="layout-center">
+                <strong>교육 취소</strong>
+            </div>
+        </div>
+        <div class="layout-center">
+            <div class="form-style1">
+                <form method="POST" action="{% url 'reservations:apply' %}">
+                    {% csrf_token %}
+                    <div class="box">
+
+                        <dl>
+                            <dt>교육명</dt>
+                            <dd>
+                                {{event.program.title}} 
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>교육기간</dt>
+                            <dd>
+                                {{event.start_date}} 
+                                ~
+                                {{event.finish_date}}
+                                 ({{event.period}}일)
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>접수기간</dt>
+                            <dd>
+                                {{event.apply_start | date:'Y년-m월-d일'}} 
+                                ~
+                                {{event.deadline | date:'Y년-m월-d일'}}
+                            </dd>
+                        </dl>
+                        {% comment %}
+                        <dl>
+                            <dt>학교명 *</dt>
+                            <dd>
+                                {{ form.school }}
+                                {{ form.school.errors }}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>학년 *</dt>
+                            <dd>
+                                <select name="grade_id">
+                                    {% for g in grades %}
+                                        <option value="{{g.grade}}">{{g.tgrade}}</option>
+                                    {% endfor %}
+                                </select>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>인원 *</dt>
+                            <dd>
+                                
+                                {{ form.students }}
+                                <span>명</span>
+                                {{form.students.errors}}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>학급수</dt>
+                            <dd>
+                                
+                                {{ form.numOfClasses }}
+                                <span>반</span>
+                                {{form.numOfClasses.errors}}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>전화번호 *</dt>
+                            <dd>
+                                {{form.phone_number}}
+                                {{form.phone_number.errors}}
+                                {% if form.phone_number.help_text %}
+                                    <p class="help">
+                                        {{form.phone_number.help_text | safe}}
+                                    </p>
+                                {% endif %}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>비밀번호 *</dt>
+                            <dd>                                
+                                {{form.password}}
+                                {{form.password.errors}}                                
+                            </dd>
+                        </dl>
+                        <input type="hidden" value="{{event.id}}" name="event_id"/>
+                        
+                        <label for="events">학년</label>
+                        <li>
+                            <select id="grades">
+                                {% for grade in grades %}
+                                    <option value="{{grade.id}}">{{grade.tgrade}}</option>
+                                {% endfor %}
+                            </select>
+                        </li>
+                        {% endcomment %}
+                        {{form.as_ul}}
+                    </div>
+                    <div class="bt-wrap">
+                        <input type="hidden" value="{{event.id}}" name="event_id"/>
+                        <input type="submit" value="신청" class="bt1 on">
+                        <a href="#" onClick="history.back()" class="bt1">취소</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

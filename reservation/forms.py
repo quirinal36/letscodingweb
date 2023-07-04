@@ -132,7 +132,7 @@ class EventForm(forms.ModelForm):
     
     class Meta:
         model = Event
-        fields = ('start_date', 'finish_date', 'apply_start', 'deadline')
+        fields = ('start_date', 'finish_date', 'apply_start', 'deadline', 'capacity')
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -163,6 +163,11 @@ class EventForm(forms.ModelForm):
             'class': 'datetimepicker-input ipt1',
             'autocomplete' : 'off',
             'placeholder' : '접수 시작일'
+        })
+        self.fields['capacity'].widget.attrs.update({
+            'class': 'ipt1',
+            'autocomplete' : 'off',
+            'placeholder' : '모집 인원을 입력하세요.'
         })
         
 class GradeModelChoiceField(ModelChoiceField):

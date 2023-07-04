@@ -61,7 +61,7 @@ class LoginView(View):
             #print(user)
             if user is not None:
                 login(self.request, user)
-                if 'next' in request.POST and request.POST.get('next') != 'None':
+                if 'next' in request.POST and request.POST.get('next') != 'None' and len(request.POST.get('next'))>0:
                     print(f"request.POST.get('next'):{request.POST.get('next')}")
                     return redirect(request.POST.get('next'))
                 return redirect('reservations:index')
@@ -527,7 +527,7 @@ class ApplyView(CreateView):
         """
 
 def applyDetail(request, apply_id):
-    application = get_object_or_404(Application, pk=event_id)
+    application = get_object_or_404(Application, pk=apply_id)
     return render(request, "program/read.html", {
         "application": application,
         "error_message":"You didn't select a choice."
@@ -555,3 +555,23 @@ class ProgramUpdateView(UpdateView):
     
     def get_success_url(self):
         return reverse_lazy("reservations:program")
+
+def applicationConfirm(request, pk):
+    response_data = {}
+    application = get_object_or_404(Application, pk=pk)
+    if application.confirmed :
+        application.confirmed = 0
+    else :
+        application.confirmed = 1
+    print(f"application.save():{application.save()}")
+    response_data['result'] = 'success'
+    
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+class ApplicationCancel(UpdateView):
+    model = Application
+    form_class = ApplicationCancelForm
+    template_name = "program/cancel.html"
+    
+    def get_success_url(self):
+        return reverse_lazy("reservations:applyList")
