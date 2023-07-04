@@ -256,3 +256,16 @@ class ProgramForm(forms.ModelForm):
     class Meta:
         model = Program
         fields = "__all__"
+        
+class ApplicationCancelForm(forms.ModelForm):
+    class Meta:
+        model = Application
+        fields = ('school', 'students', 'numOfClasses', 'phone_number', 'password')
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        class_update_fields = ['school', 'students', 'numOfClasses', 'phone_number', 'password']
+        for field_name in class_update_fields:
+            self.fields[field_name].widget.attrs.update({
+                'class': 'ipt1'
+            })

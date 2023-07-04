@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
 from .models import Board, User, Event, Grades, Application, Program
-from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm, ProgramForm
+from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm, ProgramForm, ApplicationCancelForm
 
 from django.views.generic import View, CreateView, FormView, DetailView, ListView, UpdateView
 

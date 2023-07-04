@@ -9,7 +9,7 @@ app_name="reservations"
 
 application_patterns = [
     path("confirm/<int:pk>", views.applicationConfirm, name="applicationConfirm"),
-    path("cancel/<int:pk>", views.applicationCancel, name="applicationCancel"),
+    path("cancel/<int:pk>", views.ApplicationCancel.as_view, name="applicationCancel"),
 ]
 program_patterns = [
     path("", views.ProgramListView.as_view(), name="program"),
