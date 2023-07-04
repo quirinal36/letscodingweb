@@ -4,6 +4,7 @@ from .models import Board, User, Event, Application, Program, Grades
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from phonenumber_field.formfields import PhoneNumberField
 from django.forms import ModelChoiceField
+from django.core.validators import RegexValidator
 
 class PrettyAuthenticationForm(forms.Form):
     """
@@ -12,7 +13,6 @@ class PrettyAuthenticationForm(forms.Form):
         widget=forms.TextInput(attrs={'autofocus':True, 'class':'ipt1'}))
     """
     phone_number = PhoneNumberField(
-        region="KR",
         error_messages = {'required':'전화번호를 입력해 주세요.'},
         widget=forms.TextInput(attrs={'autofocus':True, 'class':'ipt1'})
     )
@@ -37,14 +37,22 @@ class PrettyAuthenticationForm(forms.Form):
     def clean(self):
         phone_number = self.cleaned_data.get("phone_number") # 필드의 입력값 가져오기
         password = self.cleaned_data.get("password")
-        
+        print(f"phone_number:{phone_number}, password:{password}")
         try:
             user = User.objects.get(phone_number=phone_number) # 필드의 email값이 DB에 존재하는지 확인
+            
             if user.check_password(password):
                 return self.cleaned_data
             else:
+                
                 self.add_error("password", forms.ValidationError("비밀번호를 확인해 주세요."))
         except User.DoesNotExist:
+            users = User.objects.order_by("id")
+            print(users)
+            for u in users:
+                if phone_number == u.phone_number :
+                    print(f"same!! {u.phone_number}")
+                    
             # 존재하지 않는다면, 데이터를 반환시킵니다.
             self.add_error('phone_number', forms.ValidationError("존재하지 않는 전화번호입니다."))
     
@@ -138,39 +146,69 @@ class EventForm(forms.ModelForm):
         """
         self.fields['start_date'].widget.attrs.update({
             'class': 'datetimepicker-input ipt1',
-            'autocomplete' : 'off'
+            'autocomplete' : 'off',
+            'placeholder' : '교육이 시작하는 날'
         })
         self.fields['finish_date'].widget.attrs.update({
             'class': 'datetimepicker-input ipt1',
-            'autocomplete' : 'off'
+            'autocomplete' : 'off',
+            'placeholder' : '교육이 끝나는 날'
         })
         self.fields['deadline'].widget.attrs.update({
             'class': 'datetimepicker-input ipt1',
-            'autocomplete' : 'off'
+            'autocomplete' : 'off',
+            'placeholder' : '접수 마감일'
         })
         self.fields['apply_start'].widget.attrs.update({
             'class': 'datetimepicker-input ipt1',
-            'autocomplete' : 'off'
+            'autocomplete' : 'off',
+            'placeholder' : '접수 시작일'
         })
         
 class GradeModelChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
         return obj.tgrade
+    
 class ApplyForm(forms.ModelForm):
+    
     phone_number = PhoneNumberField(
         label = '전화번호',
         required = True,
         widget=forms.TextInput(attrs={'placeholder':'전화번호를 입력하세요.'}),
-        region="KR")
+        error_messages = {
+            'name':{
+                "required":"전화번호를 입력해 주세요.",
+                "malformed":"전화번호를 다시 확인해 주세요."
+            }
+        }
+    )
     password = forms.CharField(
+        label = '비밀번호',
         max_length=50, 
         widget=forms.PasswordInput(attrs={'placeholder':'비밀번호를 입력하세요.'})
     )
     grades = GradeModelChoiceField(
+        label = '학년',
         queryset = Grades.objects.all(),
         to_field_name="id",
-        required=True)
-    
+        required=True,
+    )
+    school = forms.CharField(
+        label = '학교',
+        required=True,
+        max_length=50,
+        widget=forms.TextInput(attrs={'placeholder':'학교이름을 입력하세요.'}),
+    )
+    students = forms.IntegerField(
+        label = '신청 인원',
+        required=True,
+        widget=forms.NumberInput(attrs={'placeholder':'신청인원을 입력하세요.'}),
+    )
+    numOfClasses = forms.IntegerField(
+        label = '학급수',
+        required=True,
+        widget=forms.NumberInput(attrs={'placeholder':'신청학급수를 입력하세요.'}),
+    )
     class Meta:
         model = Application
         fields = ('school', 'students', 'grades', 'numOfClasses', 'phone_number', 'password')
@@ -182,13 +220,31 @@ class ApplyForm(forms.ModelForm):
             self.fields[field_name].widget.attrs.update({
                 'class': 'ipt1'
             })
+    def phone_number_valid(self):
+        phone_regex = RegexValidator(regex=r'^\+?82?\d{10,11}$')
+        try:
+            phone_number = self.cleaned_data.get('phone_number')
+            print(f"clean phone_number:{phone_number}") 
+            phone_regex(phone_number) # return None
+        except forms.ValidationError:
+            # 존재하지 않는다면, 데이터를 반환시킵니다.
+            #self.add_error('phone_number', forms.ValidationError("전화번호를 다시 확인해 주세요.."))
+            return None
+            
+        return self.cleaned_data.get('phone_number')
     
+    
+        
     def is_valid(self):
-        #cleaned_data = super().clean()
+        valid = super(ApplyForm, self).is_valid()
+        cleaned_phone_number = self.phone_number_valid()
         #grade = cleaned_data.get('grade')
         #students = cleaned_data.get('students')
         #print(f"grade:{grade}, students:{students}")
-        return True
+        if valid and cleaned_phone_number :
+            return True
+        else:
+            return False
     
 class ProgramForm(forms.ModelForm):
     
