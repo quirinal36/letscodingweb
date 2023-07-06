@@ -574,7 +574,7 @@ class ApplicationUpdateView(UpdateView):
             password = form.cleaned_data.get('password')
             print(f"password:{password} / originApplication.password:{originApplication.password}")
             if password == originApplication.password:
-                messages.success(request, '수정이 완료되었습니다.')
+                #messages.success(request, '수정이 완료되었습니다.')
                 
                 return super().post(request, *args, **kwargs)
             else:
@@ -630,7 +630,7 @@ class ApplicationCancelView(UpdateView):
         if form.is_valid() :
             password = form.cleaned_data.get('password')
             if password == originApplication.password:
-                messages.success(request, '수정이 완료되었습니다.')
+                #messages.success(request, '수정이 완료되었습니다.')
                 
                 return super().post(request, *args, **kwargs)
             else:

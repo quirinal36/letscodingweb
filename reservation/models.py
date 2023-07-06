@@ -10,7 +10,13 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.timezone import now
 from django.core.validators import RegexValidator
 
-import datetime
+import requests
+from datetime import datetime
+from datetime import timedelta
+from bs4 import BeautifulSoup
+import urllib.parse as urlparse
+
+mykey = "N2MuvoyktD4Y9l8V2Mn8EaZctLDNoFbUNUlGeDFGWxPTRUIX1IRS37TE2jXjkwPWh73bq1oLv%2BmPJojowmQZSg%3D%3D"
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -127,15 +133,58 @@ class Event(models.Model):
         return[(field.verbose_name, field.value_from_object(self)) for field in self.__class__._meta.fields]
     
     def save(self,*args, **kwargs):
-        self.period = 0
+        self.period = 0        
+        
+        year_set = set()
+        month_set = set()
+        day = self.start_date
+        while day <= self.finish_date :
+            year_set.add(day.year)
+            month_set.add(day.month)
+            day = day + timedelta(days=1)
+        
+        holidays = self.get_holidays(year_set, month_set)
         day = self.start_date
         while day <= self.finish_date :
             if day.weekday() < 5 :
-                self.period += 1
-            day = day + datetime.timedelta(days=1)
-            #print(f"day in Event save:{day}")
-            
+                
+                if not day in holidays :
+                    self.period += 1
+            day = day + timedelta(days=1)
+        #print(holidays)
+        
         super(Event,self).save(*args, **kwargs)
+    def get_request_query(self, url, operation, params, serviceKey):
+        params = urlparse.urlencode(params)
+        request_query = url + '/' + operation + '?' + params + '&' + 'serviceKey' + '=' + serviceKey
+        return request_query
+    def get_holidays(self, year_set, month_set):
+        result = set()
+        # 한국천문연구원 특일 정보
+        url = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService"
+        
+        # 공휴일 정보조회
+        operation = "getRestDeInfo"
+        holidays = []
+        for year in year_set:
+            
+            for month in month_set:
+                
+                # parameter
+                params = {'solYear':year, 'solMonth': "%02d"%month}
+                
+                request_query = self.get_request_query(url, operation, params, mykey)
+                
+                get_data = requests.get(request_query)
+                if get_data.ok == True :
+                    
+                    soup = BeautifulSoup(get_data.content, 'xml')
+                    item = soup.findAll('item')
+                    
+                    for info in item:
+                        result.add(datetime.strptime(info.locdate.string, '%Y%m%d').date())
+        return list(result)
+        
     def __str__(self):
          return f"(title:{self.title}, program:{self.program})"
      
