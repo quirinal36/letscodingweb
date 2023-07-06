@@ -4,12 +4,12 @@
     <div id="containerWrap">
         <div class="title-style1">
             <div class="layout-center">
-                <strong>교육 신청</strong>
+                <strong>교육 취소</strong>
             </div>
         </div>
         <div class="layout-center">
             <div class="form-style1">
-                <form method="POST" action="{% url 'reservations:apply' %}">
+                <form method="POST">
                     {% csrf_token %}
                     <div class="box">
 
@@ -36,12 +36,17 @@
                                 {{event.deadline | date:'Y년-m월-d일'}}
                             </dd>
                         </dl>
+                        
                         {{form.as_ul}}
+                        {% if messages %}
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        {% endif %}
                     </div>
-                    <div class="bt-wrap">
-                        <input type="hidden" value="{{event.id}}" name="event_id"/>
-                        <input type="submit" value="신청" class="bt1 on">
-                        <a href="#" onClick="history.back()" class="bt1">취소</a>
+                    <div class="bt-wrap">                        
+                        <input type="submit" value="수정하기" class="bt1 on">
+                        <a href="{% url 'reservations:applyList' %}" class="bt1">뒤로가기</a>
                     </div>
                 </form>
             </div>

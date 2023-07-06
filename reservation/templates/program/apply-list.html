@@ -25,7 +25,8 @@
                                     <th>운영일수</th>
                                     <th>신청일시</th>
                                     <th>확정 유/무</th>
-                                    <th>신청취소</th>
+                                    <th>수정</th>
+                                    <th>취소</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,7 +63,14 @@
                                     </td>
 
                                     <td>
-                                        <a href="">취소하기</a>
+                                        <a href="{% url 'reservations:applicationUpdate' application.id%}">수정하기</a>
+                                    </td>
+                                    <td>
+                                        {% if application.canceled %}
+                                            취소완료
+                                        {% else %}
+                                            <a href="{% url 'reservations:applicationCancel' application.id%}">취소하기</a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %}

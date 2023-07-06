@@ -37,7 +37,7 @@ class PrettyAuthenticationForm(forms.Form):
     def clean(self):
         phone_number = self.cleaned_data.get("phone_number") # 필드의 입력값 가져오기
         password = self.cleaned_data.get("password")
-        print(f"phone_number:{phone_number}, password:{password}")
+        # print(f"phone_number:{phone_number}, password:{password}")
         try:
             user = User.objects.get(phone_number=phone_number) # 필드의 email값이 DB에 존재하는지 확인
             
@@ -48,10 +48,6 @@ class PrettyAuthenticationForm(forms.Form):
                 self.add_error("password", forms.ValidationError("비밀번호를 확인해 주세요."))
         except User.DoesNotExist:
             users = User.objects.order_by("id")
-            print(users)
-            for u in users:
-                if phone_number == u.phone_number :
-                    print(f"same!! {u.phone_number}")
                     
             # 존재하지 않는다면, 데이터를 반환시킵니다.
             self.add_error('phone_number', forms.ValidationError("존재하지 않는 전화번호입니다."))
@@ -176,6 +172,32 @@ class GradeModelChoiceField(ModelChoiceField):
     
 class ApplyForm(forms.ModelForm):
     
+    
+    class Meta:
+        model = Application
+        fields = ('school', 'students', 'grades', 'numOfClasses', 'phone_number', 'password')
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        class_update_fields = ['school', 'students', 'grades', 'numOfClasses', 'phone_number', 'password']
+        for field_name in class_update_fields:
+            self.fields[field_name].widget.attrs.update({
+                'class': 'ipt1'
+            })
+
+    def phone_number_valid(self):
+        phone_regex = RegexValidator(regex=r'^\+?82?\d{10,11}$')
+        try:
+            phone_number = self.cleaned_data.get('phone_number')
+            print(f"clean phone_number:{phone_number}") 
+            phone_regex(phone_number) # return None
+        except forms.ValidationError:
+            # 존재하지 않는다면, 데이터를 반환시킵니다.
+            #self.add_error('phone_number', forms.ValidationError("전화번호를 다시 확인해 주세요.."))
+            return None
+            
+        return self.cleaned_data.get('phone_number')
+    
     phone_number = PhoneNumberField(
         label = '전화번호',
         required = True,
@@ -214,31 +236,6 @@ class ApplyForm(forms.ModelForm):
         required=True,
         widget=forms.NumberInput(attrs={'placeholder':'신청학급수를 입력하세요.'}),
     )
-    class Meta:
-        model = Application
-        fields = ('school', 'students', 'grades', 'numOfClasses', 'phone_number', 'password')
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        class_update_fields = ['school', 'students', 'grades', 'numOfClasses', 'phone_number', 'password']
-        for field_name in class_update_fields:
-            self.fields[field_name].widget.attrs.update({
-                'class': 'ipt1'
-            })
-    def phone_number_valid(self):
-        phone_regex = RegexValidator(regex=r'^\+?82?\d{10,11}$')
-        try:
-            phone_number = self.cleaned_data.get('phone_number')
-            print(f"clean phone_number:{phone_number}") 
-            phone_regex(phone_number) # return None
-        except forms.ValidationError:
-            # 존재하지 않는다면, 데이터를 반환시킵니다.
-            #self.add_error('phone_number', forms.ValidationError("전화번호를 다시 확인해 주세요.."))
-            return None
-            
-        return self.cleaned_data.get('phone_number')
-    
-    
         
     def is_valid(self):
         valid = super(ApplyForm, self).is_valid()
@@ -257,15 +254,110 @@ class ProgramForm(forms.ModelForm):
         model = Program
         fields = "__all__"
         
-class ApplicationCancelForm(forms.ModelForm):
+class ApplicationUpdateForm(forms.ModelForm):
+    
     class Meta:
         model = Application
-        fields = ('school', 'students', 'numOfClasses', 'phone_number', 'password')
+        fields = ('school', 'students', 'grades', 'numOfClasses', 'phone_number', 'password')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        class_update_fields = ['school', 'students', 'numOfClasses', 'phone_number', 'password']
+        if "instance" in kwargs:
+            application = kwargs["instance"]
+            grade_id = application.grade.id
+            self.fields['grades'].initial = grade_id
+        
+        class_update_fields = ['school', 'students', 'grades', 'numOfClasses', 'phone_number', 'password']
         for field_name in class_update_fields:
             self.fields[field_name].widget.attrs.update({
                 'class': 'ipt1'
             })
+            
+    def clean(self):
+        form_data = self.cleaned_data
+        
+        return form_data
+        """
+        print("clean-1")
+        if "pk" in kwargs:
+            print(f"clean-2 pk:{kwargs['pk']}")
+            application = Application.objects.get(pk = kwargs["pk"])
+            origin_password = application.password
+            print(f"origin_password:{origin_password}")
+            new_password = self.cleaned_data.get('password')
+            print(f"new_password: {new_password}")
+            if origin_password != new_password:
+                print("clean-3")
+                self.add_error("password", forms.ValidationError("비밀번호가 일치하지 않습니다.")) 
+                return False
+            else:
+                return True
+        """
+            
+    password = forms.CharField(
+        label = '비밀번호',
+        max_length=50, 
+        widget=forms.PasswordInput(attrs={'placeholder':'비밀번호를 입력하세요.'})
+    )
+    grades = GradeModelChoiceField(
+        label = '학년',
+        empty_label="학년을 선택해 주세요.",
+        queryset = Grades.objects.all(),
+        to_field_name="id",
+        required=True,
+    )
+    
+class ApplicationCancelForm(forms.ModelForm):
+    
+    class Meta:
+        model = Application
+        fields = ('school', 'students', 'grade', 'numOfClasses', 'phone_number', 'password')
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if "instance" in kwargs:
+            application = kwargs["instance"]
+            grade_id = application.grade.id
+            self.fields['grade'].initial = grade_id
+        
+        class_update_fields = ['school', 'students', 'grade', 'numOfClasses', 'phone_number','password']
+        for field_name in class_update_fields:
+            if field_name == 'password':
+                self.fields[field_name].widget.attrs.update({
+                    'class': 'ipt1',
+                })
+            else :
+                self.fields[field_name].widget.attrs.update({
+                    'class': 'ipt1',
+                    'readonly': 'True',
+                })
+    
+    def clean(self, *args, **kwargs):
+        print("clean-1")
+        print(F"clean kwargs:{kwargs}")
+        if "pk" in kwargs:
+            print(f"clean-2 pk:{kwargs['pk']}")
+            application = Application.objects.get(pk = kwargs["pk"])
+            origin_password = application.password
+            print(f"origin_password:{origin_password}")
+            new_password = self.cleaned_data.get('password')
+            print(f"new_password: {new_password}")
+            if origin_password != new_password:
+                print("clean-3")
+                self.add_error("password", forms.ValidationError("비밀번호가 일치하지 않습니다.")) 
+                return False
+            else:
+                return True
+            
+    password = forms.CharField(
+        label = '비밀번호',
+        max_length=50, 
+        widget=forms.PasswordInput(attrs={'placeholder':'비밀번호를 입력하세요.'})
+    )
+    grade = GradeModelChoiceField(
+        label = '학년',
+        empty_label="학년을 선택해 주세요.",
+        queryset = Grades.objects.all(),
+        to_field_name="id",
+        required=True,
+    )

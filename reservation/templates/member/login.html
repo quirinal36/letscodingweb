@@ -15,38 +15,7 @@
                         {% csrf_token %}
                         {{ form.as_p }}
                     </div>
-                    {% comment %}
-                    <div class="box">
-                        {% if message %}
-                            <p class="guide">{{message}}</p>
-                        {% endif %}
-                        <dl>
-                            <dt>이메일 주소</dt>
-                            <dd>
-                                {% comment %}
-                                <input type="text" placeholder="이메일 주소 입력" class="ipt1">
-                                {% endcomment %}
-                                {% comment %}
-                                {{ form.email }}
-                                
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>비밀번호</dt>
-                            <dd>
-                                {% comment %}
-                                <input type="password" placeholder="비밀번호 입력" class="ipt1">
-                                {% endcomment %}
-                                {% comment %}
-                                {{ form.password }}
-                                
-                            </dd>
-                        </dl>
-                    </div>
-                    {% endcomment %}
                     <div class="bt-wrap">
-                        
-                        
                         <input type="submit" value="login" class="bt1 on">
                         <a href="#" onClick="history.back()" class="bt1">취소</a>
                     </div>

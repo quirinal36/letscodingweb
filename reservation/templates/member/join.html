@@ -10,62 +10,10 @@
             <!-- 회원가입 -->
             <div class="form-style1">
                 <form method="post">
-                    
                     <div class="box">
                         {% csrf_token %}
                         
                         {{ form.as_ul }}
-                        
-                        {% comment %}
-                        <dl>
-                            <dt>{{ form.name.label }} *</dt>
-                            <dd class="ipt1">
-                                {{ form.name }}
-
-                                <p class="guide">이름을 입력하세요.</p>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>이메일 주소 *</dt>
-                            <dd class="ipt1">
-                                {{form.email}}
-                                <p class="guide">이메일 주소를 입력하세요.</p>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>비밀번호 *</dt>
-                            <dd class="ipt1">
-                                {{form.password1}}
-                                <p class="guide">비밀번호를 입력하세요.</p>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>비밀번호 확인 *</dt>
-                            <dd class="ipt1">
-                                {{form.password2}}
-                                <p class="guide">비밀번호가 일치하지 않습니다.</p>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>학교명</dt>
-                            <dd class="ipt1">
-                                {{form.school}}
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>개인정보처리방침 *</dt>
-                            <dd>
-                                <div class="text-box">
-                                    <textarea>개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침 개인정보처리방침</textarea>
-                                </div>
-                                <div class="agree-line">
-                                    <input id="agree" type="checkbox">
-                                    <label for="agree">동의합니다.</label>
-                                </div>
-                                <p class="guide">개인정보처리방침에 동의해주세요.</p>
-                            </dd>
-                        </dl>
-                        {% endcomment %}
                     </div>
                     <div class="bt-wrap">
                         <input type="submit" value="회원가입" class="bt1 on">

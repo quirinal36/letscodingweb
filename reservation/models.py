@@ -155,6 +155,7 @@ class Application(models.Model):
     create_date =models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
     confirmed = models.BooleanField(default = False)
+    canceled = models.BooleanField(default = False)
     
     def __str__(self):
         return f"phone_number:{self.phone_number}, event_id:{self.event.id}, event:{self.event}"

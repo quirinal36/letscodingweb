@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
 from .models import Board, User, Event, Grades, Application, Program
-from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm, ProgramForm, ApplicationCancelForm
+from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm, ProgramForm, ApplicationUpdateForm, ApplicationCancelForm
 
 from django.views.generic import View, CreateView, FormView, DetailView, ListView, UpdateView
 
@@ -318,7 +318,7 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
             #print(event.user)
             event.user = request.user
             #event.save() <<-- 얘가 있으면 수정도 되면서 복제본이 추가됨
-            print(event.user)
+            #print(event.user)
         return super().post(request, *args, **kwargs)
             
     
@@ -525,7 +525,69 @@ class ApplyView(CreateView):
             else :
                 print('applyForm invalid')
         """
+def applicationConfirm(request, pk):
+    response_data = {}
+    application = get_object_or_404(Application, pk=pk)
+    if application.confirmed :
+        application.confirmed = 0
+    else :
+        application.confirmed = 1
+    #print(f"application.save():{application.save()}")
+    response_data['result'] = 'success'
+    
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+class ApplicationUpdateView(UpdateView):
+    model = Application
+    form_class = ApplicationUpdateForm
+    template_name = "program/update.html"
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        application = get_object_or_404(Application, pk=self.kwargs['pk'])
+        event = application.event
+        
+        #event = get_object_or_404(Event, pk=self.kwargs['event_id'])
+        grades = Grades.objects.order_by("id")
+        context['grades'] = grades
+        context['event'] = event
+        
+        return context
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        #print(f"get_form_kwargs:{kwargs}")
+        # kwargs['request'] = self.request
+        return kwargs
+    
+    def get_success_url(self):
+        return reverse_lazy("reservations:applyList")
+    
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        originApplication = Application.objects.get(pk=self.kwargs['pk'])
+        if form.is_valid():
+            password = form.cleaned_data.get('password')
+            print(f"password:{password} / originApplication.password:{originApplication.password}")
+            if password == originApplication.password:
+                messages.success(request, '수정이 완료되었습니다.')
+                
+                return super().post(request, *args, **kwargs)
+            else:
+                messages.error(self.request, '비밀번호가 틀렸습니다. 다시 입력해 주세요.', extra_tags='danger')
+            print(form.errors)
+            print(form.non_field_errors())
+            context = {
+                    'form': form, 
+                    }
+            context['grades'] = Grades.objects.order_by("id")
+            context['event'] = Event.objects.get(pk=originApplication.event.id)
+            return render(request, self.template_name, context)
+    
 def applyDetail(request, apply_id):
     application = get_object_or_404(Application, pk=apply_id)
     return render(request, "program/read.html", {
@@ -533,6 +595,55 @@ def applyDetail(request, apply_id):
         "error_message":"You didn't select a choice."
     })
     
+class ApplicationCancelView(UpdateView):
+    model = Application
+    form_class = ApplicationCancelForm
+    template_name = "program/cancel.html"
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        application = get_object_or_404(Application, pk=self.kwargs['pk'])
+        #event = application.event
+        
+        context['application'] = application
+        #context['event'] = event
+        
+        return context
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        #print(f"get_form_kwargs:{kwargs}")
+        # kwargs['request'] = self.request
+        return kwargs
+    
+    def get_success_url(self):
+        return reverse_lazy("reservations:applyList")
+    
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        originApplication = Application.objects.get(pk=self.kwargs['pk'])
+        print(F"post kwargs:{kwargs}")
+        if form.is_valid() :
+            password = form.cleaned_data.get('password')
+            if password == originApplication.password:
+                messages.success(request, '수정이 완료되었습니다.')
+                
+                return super().post(request, *args, **kwargs)
+            else:
+                messages.error(self.request, '비밀번호가 틀렸습니다. 다시 입력해 주세요.', extra_tags='danger')
+        
+            context = {
+                    'form': form, 
+                    }
+            context['grades'] = Grades.objects.order_by("id")
+            context['application'] = originApplication
+            return render(request, self.template_name, context)
+
+### Program ###    
 class ProgramListView(ListView):
     model = Program
     context_object_name = 'program_list'
@@ -556,22 +667,3 @@ class ProgramUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy("reservations:program")
 
-def applicationConfirm(request, pk):
-    response_data = {}
-    application = get_object_or_404(Application, pk=pk)
-    if application.confirmed :
-        application.confirmed = 0
-    else :
-        application.confirmed = 1
-    print(f"application.save():{application.save()}")
-    response_data['result'] = 'success'
-    
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-class ApplicationCancel(UpdateView):
-    model = Application
-    form_class = ApplicationCancelForm
-    template_name = "program/cancel.html"
-    
-    def get_success_url(self):
-        return reverse_lazy("reservations:applyList")
