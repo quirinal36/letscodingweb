@@ -22,7 +22,7 @@
                                     <th>교육명</th>
                                     <th>운영일수</th>
                                     <th>모집인원</th>
-                                    <th></th>
+                                    <th>상태</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,7 +50,18 @@
                                     <td>
                                         {{item.capacity}}
                                     </td>
-                                    
+                                    <td>
+                                        {{item.apply_start}}
+                                        {{item.deadline}}
+                                        {{today_date}}
+                                        {% if item.apply_start <= today_date and item.deadline >= today_date%}
+                                        접수중
+                                        {% elif item.apply_start > today_date %}
+                                        접수대기
+                                        {% elif item.deadline < today_date%}
+                                        접수마감
+                                        {% endif %}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

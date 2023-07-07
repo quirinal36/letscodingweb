@@ -133,6 +133,9 @@ class Event(models.Model):
         return[(field.verbose_name, field.value_from_object(self)) for field in self.__class__._meta.fields]
     
     def save(self,*args, **kwargs):
+        self.apply_start = self.apply_start.replace(hour=0, minute=0, second=0, microsecond=0)
+        self.deadline = self.deadline.replace(hour=23, minute=59, second=59)
+        
         self.period = 0        
         
         year_set = set()

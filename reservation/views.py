@@ -21,6 +21,7 @@ import json
 from django.core import validators
 import datetime
 from django.utils import timezone
+from datetime import timedelta
 
 def index(request):
     board_list = Board.objects.order_by("id")
@@ -361,15 +362,15 @@ class EventListView(ListView):
         paginator = page.paginator
         pagelist = paginator.get_elided_page_range(page.number, on_each_side=3, on_ends=0)
         context['pagelist'] = pagelist
-        
+        context['today_date'] = now = timezone.now()
         return context
     
     def get_queryset(self):
         
         enabled = self.request.GET.get('enabled', False)
         if enabled :
-            now = timezone.now()
-            return Event.objects.filter(apply_start__lt=now, deadline__gt=now)
+            now = timezone.now() 
+            return Event.objects.filter(apply_start__lt=now, deadline__gt=(now- timedelta(days=1)))
         
         return Event.objects.order_by("-id")
     
