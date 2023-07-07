@@ -19,6 +19,8 @@ from django.views.decorators.http import require_http_methods, require_POST
 from django.core.paginator import Paginator
 import json
 from django.core import validators
+import datetime
+from django.utils import timezone
 
 def index(request):
     board_list = Board.objects.order_by("id")
@@ -343,7 +345,7 @@ def eventUpdate(request, event_id):
             
         return redirect('/reservation/event/detail/'+str(event.id))
     
-class EventListView(ListView)    :
+class EventListView(ListView):
     model = Event
     template_name = "event/list.html"
     context_object_name = "event_list"
@@ -354,15 +356,26 @@ class EventListView(ListView)    :
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
         page = context['page_obj']
         paginator = page.paginator
         pagelist = paginator.get_elided_page_range(page.number, on_each_side=3, on_ends=0)
         context['pagelist'] = pagelist
+        
         return context
     
     def get_queryset(self):
+        
+        enabled = self.request.GET.get('enabled', False)
+        if enabled :
+            now = timezone.now()
+            return Event.objects.filter(apply_start__lt=now, deadline__gt=now)
+        
         return Event.objects.order_by("-id")
     
+    def get(self, request, *args,**kwargs):
+        
+        return super().get(request, *args,**kwargs)
 def event(request):
     event_list = Event.objects.order_by("id")
     context = {"event_list": event_list}

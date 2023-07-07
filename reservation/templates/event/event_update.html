@@ -38,7 +38,7 @@ $(function () {
     </div>
     <div class="layout-center">
         <div class="form-style1">
-            <form method="post" id="updateForm" onSubmit="if(!confirm('입력한 정보로 저장하시겠습니까?')){return false;}">
+            <form method="post" id="updateForm" >
                 {% csrf_token %}
                 <div class="box">
                     <ul>

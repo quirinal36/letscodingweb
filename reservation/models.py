@@ -154,10 +154,12 @@ class Event(models.Model):
         #print(holidays)
         
         super(Event,self).save(*args, **kwargs)
+    
     def get_request_query(self, url, operation, params, serviceKey):
         params = urlparse.urlencode(params)
         request_query = url + '/' + operation + '?' + params + '&' + 'serviceKey' + '=' + serviceKey
         return request_query
+    
     def get_holidays(self, year_set, month_set):
         result = set()
         # 한국천문연구원 특일 정보
