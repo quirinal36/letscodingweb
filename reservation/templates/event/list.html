@@ -13,7 +13,23 @@
                     <a href="?enabled=1">접수중</a>
                     <a href="{% url 'reservations:event' %}">모두보기</a>
                     
+                    <select name="year">
+                        {% for year in year_list%}
+                        <option value="{{year}}">
+                            {{year}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <select name="month">
+                        {% for month in month_list%}
+                        <option value="{{month}}">
+                            {{month}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    
                     <form>
+                        
                         <table class="tbl1">
                             <thead>
                                 <tr>
@@ -51,9 +67,6 @@
                                         {{item.capacity}}
                                     </td>
                                     <td>
-                                        {{item.apply_start}}
-                                        {{item.deadline}}
-                                        {{today_date}}
                                         {% if item.apply_start <= today_date and item.deadline >= today_date%}
                                         접수중
                                         {% elif item.apply_start > today_date %}

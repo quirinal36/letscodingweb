@@ -357,19 +357,28 @@ class EventListView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        now = timezone.now() 
+        year_list = [i for i in range(now.year-1, now.year+2)]
+        print(f"year_list:{year_list}")
+        month_list = [i for i in range(1, 13)]
+        print(f"month_list:{month_list}")
         
         page = context['page_obj']
         paginator = page.paginator
         pagelist = paginator.get_elided_page_range(page.number, on_each_side=3, on_ends=0)
         context['pagelist'] = pagelist
         context['today_date'] = now = timezone.now()
+        context['year_list']=year_list
+        context['month_list']=month_list
         return context
     
     def get_queryset(self):
+        now = timezone.now() 
         
         enabled = self.request.GET.get('enabled', False)
-        if enabled :
-            now = timezone.now() 
+        year = self.request.GET.get('year', now.year)
+        month = self.request.GET.get('month', now.month)
+        if enabled :            
             return Event.objects.filter(apply_start__lt=now, deadline__gt=(now- timedelta(days=1)))
         
         return Event.objects.order_by("-id")
