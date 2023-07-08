@@ -367,7 +367,9 @@ class EventListView(ListView):
         paginator = page.paginator
         pagelist = paginator.get_elided_page_range(page.number, on_each_side=3, on_ends=0)
         context['pagelist'] = pagelist
-        context['today_date'] = now = timezone.now()
+        context['today_date'] = now 
+        context['cur_year']= now.year
+        context['cur_month']=now.month
         context['year_list']=year_list
         context['month_list']=month_list
         return context
