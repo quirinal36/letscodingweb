@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
-    {% load static %}
+{% load static %}
+{% block extrahead %}
+    <link rel="stylesheet" href="{%static 'reservations/css/paging.css'%}"/>
+    <style>
+        
+    </style>
+{% endblock %}
+
 {% block content %}
     <div id="containerWrap">
     {% comment "note" %}

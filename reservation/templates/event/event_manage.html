@@ -1,4 +1,17 @@
 {% extends 'base.html' %}
+<head>
+    {% load static %}
+    {% block extrahead %}
+    <link rel="stylesheet" href="{%static 'reservations/css/event.css'%}"/>
+    <link rel="stylesheet" href="{%static 'reservations/css/paging.css'%}"/>
+    <script src="{%static 'reservations/js/event.js'%}"></script>
+    <style>
+        #dialog{
+            background-color: red;
+        }
+    </style>
+    {% endblock %}
+</head>
 {% block content %}
 <div id="containerWrap">
     <div class="title-style1">

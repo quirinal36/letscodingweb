@@ -13,13 +13,21 @@ class PrettyAuthenticationForm(forms.Form):
         widget=forms.TextInput(attrs={'autofocus':True, 'class':'ipt1'}))
     """
     phone_number = PhoneNumberField(
+        label = '전화번호',
         error_messages = {'required':'전화번호를 입력해 주세요.'},
-        widget=forms.TextInput(attrs={'autofocus':True, 'class':'ipt1'})
+        widget=forms.TextInput(attrs={
+            'placeholder' : '01011112222',
+            'autofocus':True, 
+            'class':'ipt1'})
     )
         
     password = forms.CharField(
+        label = '비밀번호',
         error_messages = {'required':'비밀번호를 입력해 주세요.'},
-        widget=forms.PasswordInput(attrs={'class':'ipt1'}))
+        widget=forms.PasswordInput(attrs={
+            'placeholder' : '알파벳과 숫자가 포함된 8글자 이상의 비밀번호',
+            'class':'ipt1'
+            }))
     """
     def __init__(self, *args, **kwargs):
         super().__init__(self, *args, **kwargs)
@@ -132,7 +140,6 @@ class EventForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print(f"init")
         """
         class_update_fields = ['title']
         for field_name in class_update_fields:

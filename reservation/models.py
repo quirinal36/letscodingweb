@@ -70,7 +70,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
     # validators = [phoneNumberRegex]
-    phone_number = PhoneNumberField(unique=True, blank=False, verbose_name="전화번호")
+    phone_number = PhoneNumberField(verbose_name="전화번호", unique=True, blank=False)
     name = models.CharField(max_length=120, default="", blank=True, verbose_name="이름")
     #email_verified = models.BooleanField(default=False)  # 👈 인증여부(True, False)
     #email_secret = models.CharField(max_length=120, default="", blank=True)  # 👈 uuid를 사용하여 난수 임시 저장

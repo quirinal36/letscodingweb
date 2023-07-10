@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block extrahead %}
+    <link rel="stylesheet" href="{%static 'reservations/css/paging.css'%}"/>
+    <style>
+        
+    </style>
+{% endblock %}
 {% block content %}
-    {% load static %}
+    
     <div id="containerWrap">
         <div class="title-style1">
             <div class="layout-center">

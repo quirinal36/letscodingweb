@@ -12,8 +12,8 @@
       />
       
       <script src="{% static 'reservations/js/jquery-1.12.1.min.js' %}"></script>
-      <script src="{% static 'reservations/js/event.js' %}"></script>
-      <script src="{% static 'reservations/js/apply.js' %}"></script>
+      
+      
       <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
       <link rel="stylesheet" href="{% static 'reservations/css/css.css'%} ">
 
@@ -38,6 +38,8 @@
       <meta property="og:description" content="우리지역의 시설과 전문가를 공유하다.">
       <meta property="og:image" content="{% static 'reservations/img/og.jpg' %}">
       <meta property="og:url" content="">
+      {% block extrahead %}
+      {% endblock %}
     </head>
     <body>
         {% comment %}

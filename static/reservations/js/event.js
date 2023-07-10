@@ -1,5 +1,5 @@
 function deleteEvent(eventId){
-    console.log("deleteEvent:" + eventId);
+    
     $("<div></div>").appendTo('body')
     .attr("id", "dialog")
     .html('<div><h3>정말 이 글을 삭제하시겠습니까?</h3></div>')

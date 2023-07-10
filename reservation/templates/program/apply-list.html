@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
+{% block extrahead %}
+    {% load static %}
+    <script src="{% static 'reservations/js/apply.js' %}"></script>
+    <link rel="stylesheet" href="{%static 'reservations/css/paging.css'%}"/>
+    <style>
+        
+    </style>
+{% endblock %}
 {% block content %}
     
     <div id="containerWrap">
