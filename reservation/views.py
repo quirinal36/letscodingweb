@@ -22,6 +22,8 @@ from django.core import validators
 import datetime
 from django.utils import timezone
 from datetime import timedelta
+from dateutil.relativedelta import relativedelta
+from django.db.models import Q
 
 def index(request):
     board_list = Board.objects.order_by("id")
@@ -359,31 +361,71 @@ class EventListView(ListView):
         context = super().get_context_data(**kwargs)
         now = timezone.now() 
         year_list = [i for i in range(now.year-1, now.year+2)]
-        print(f"year_list:{year_list}")
         month_list = [i for i in range(1, 13)]
-        print(f"month_list:{month_list}")
-        
+        show_list = {0:'모두보기', 1:'접수중'}
+        context['show_list'] = show_list
         page = context['page_obj']
         paginator = page.paginator
+        context['total'] = paginator.count
         pagelist = paginator.get_elided_page_range(page.number, on_each_side=3, on_ends=0)
-        context['pagelist'] = pagelist
-        context['today_date'] = now 
-        context['cur_year']= now.year
-        context['cur_month']=now.month
+        context['pagelist'] = pagelist        
+        context['today_date'] = now         
+        year = self.request.GET.get('year', now.year)
+        month = self.request.GET.get('month', now.month)
+        enabled = self.request.GET.get('enabled', 0)
+        if enabled :
+            context['enabled'] = int(enabled)
+        if year :
+            context['cur_year']= int(year)
+        if month :            
+            context['cur_month']=int(month)
+                
         context['year_list']=year_list
         context['month_list']=month_list
         return context
     
     def get_queryset(self):
         now = timezone.now() 
-        
-        enabled = self.request.GET.get('enabled', False)
         year = self.request.GET.get('year', now.year)
         month = self.request.GET.get('month', now.month)
-        if enabled :            
-            return Event.objects.filter(apply_start__lt=now, deadline__gt=(now- timedelta(days=1)))
         
-        return Event.objects.order_by("-id")
+        month = str(month).zfill(2)
+        
+        #print(f"month:{month}")
+        #print(f"year:{year}")
+        selected_date = datetime.datetime.strptime(f"{year}/{month}", '%Y/%m')
+        #print(f"selected_date:{selected_date}")
+        
+        lastDayOfMonth = selected_date + relativedelta(months=1)
+        #print(f"Last date of month:{lastDayOfMonth}")
+        enabled = self.request.GET.get('enabled', '0')
+        #print(f"enabled:{enabled}")
+        #print(f"enabled:{type(enabled)}")
+        if int(enabled) == 0:
+            
+            queryset = Event.objects.filter(
+                (
+                    (Q(start_date__lt=lastDayOfMonth)&Q(start_date__gte=selected_date))
+                    |
+                    (Q(finish_date__lt=lastDayOfMonth)&Q(finish_date__gte=selected_date))
+                )
+            )
+            #print(str(queryset.query))
+            return queryset
+        else:
+            
+            queryset = Event.objects.filter(
+                (
+                    (Q(start_date__lt=lastDayOfMonth)&Q(start_date__gte=selected_date))
+                    |
+                    (Q(finish_date__lt=lastDayOfMonth)&Q(finish_date__gte=selected_date))
+                )
+                & 
+                    (Q(apply_start__lt=now) & Q(deadline__gt=now+ timedelta(days=1))
+                )
+            )
+            #print(str(queryset.query))
+            return queryset        
     
     def get(self, request, *args,**kwargs):
         
