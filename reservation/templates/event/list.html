@@ -12,7 +12,7 @@
     <div id="containerWrap">
         <div class="title-style1">
             <div>
-                <strong>교육 신청</strong>
+                <strong>교육 리스트</strong>
             </div>
         </div>
         <div class="layout-center">
@@ -63,47 +63,6 @@
                         </select>
                     </div>
                 </div>
-
-
-                <!--
-                <select name="enabled" class="search_option">
-                    {% for key, val in show_list.items %}
-                        {% if enabled == key %}
-                        <option value="{{key}}" selected>{{val}}</option>
-                        {% else %}
-                        <option value="{{key}}" >{{val}}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                <select name="year" class="search_option">
-                    <option value="">연도</option>
-                    {% for year in year_list%}
-                        {% if cur_year == year %}
-                            <option value="{{year}}" selected>
-                                {{year}}
-                            </option>
-                        {% else %}
-                            <option value="{{year}}" >
-                                {{year}}
-                            </option>                            
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                <select name="month" class="search_option">
-                    <option value="">월</option>
-                    {% for month in month_list%}
-                        {% if cur_month == month %} 
-                            <option value="{{month}}" selected >
-                                {{month}}
-                            </option>
-                        {% else %}
-                            <option value="{{month}}" >
-                                {{month}}
-                            </option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                -->
                 <div class="tbl-wrap scroll">
                     <table class="tbl1">
                         <thead>
@@ -112,8 +71,8 @@
                                 <th>교육기간</th>
                                 <th>운영일수</th>
                                 <th>모집인원</th>
-                                <th>신청기간</th>
-                                <th>신청</th>
+                                <th>접수기간</th>
+                                <th>접수</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -140,11 +99,11 @@
                                 </td>
                                 <td>
                                     {% if item.apply_start <= today_date and item.deadline >= today_date%}
-                                    <a href="{% url 'reservations:applyForm' item.id %}" class="bt2 on">신청하기</a>
+                                    <a href="{% url 'reservations:applyForm' item.id %}" class="bt2 on">접수하기</a>
                                     {% elif item.apply_start > today_date %}
-                                    신청대기
+                                    접수대기
                                     {% elif item.deadline < today_date%}
-                                    신청마감
+                                    마감
                                     {% endif %}
                                 </td>
                             </tr>
@@ -159,11 +118,10 @@
                 <a href="#" onclick="javascript:alert('선택된 항목이 없습니다.');" class="bt1">신청 취소</a>
             </div>
             {% endcomment %}
+            
             <div class="page-wrap">
+                <a href="javascript:void(0);" onclick="javascript:page('1')" class="page-bt prev"><img src="/static/reservations/img/page-prev.png" alt="처음"></a>
                 {% if page_obj.has_previous %}
-                    <!--
-                    <a href="?page={{page_obj.previous_page_number}}">Prev</a>
-                    -->
                     <a href="javascript:void(0);" onclick="javascript:page('{{page_obj.previous_page_number}}')" class="page-bt prev"><img src="/static/reservations/img/page-prev.png" alt="이전"></a>
                 {% endif %}
 
@@ -182,6 +140,7 @@
                 {% if page_obj.has_next %}
                     <a href="?page={{page_obj.next_page_number}}" class="page-bt next"><img src="/static/reservations/img/page-next.png" alt="다음"></a>
                 {% endif %}
+                <a href="javascript:void(0);" onclick="javascript:page('{{num_pages}}')" class="page-bt next"><img src="/static/reservations/img/page-next.png" alt="마지막"></a>
             </div>
         </div>
     </div>    

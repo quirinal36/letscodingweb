@@ -295,6 +295,8 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        programs = Program.objects.order_by("id")
+        context['programs'] = programs
         event = get_object_or_404(Event, pk=self.kwargs['pk'])
         context['event'] = event
         return context
@@ -313,10 +315,12 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
         if not self.request.user.is_staff :
             # Only staff users are allowed to perform the POST operation
             return HttpResponseForbidden("로그인을 해 주세요.")
-        
+        response_data = {}
         eventForm = EventForm(request.POST)
         #print("EventUpdateView POST")
+        print(list(request.POST.items()))
         if eventForm.is_valid():
+            
             #print("EventUpdateView validated")
             event = eventForm.save(commit=False)
             #print("after eventform save")
@@ -324,7 +328,12 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
             event.user = request.user
             #event.save() <<-- 얘가 있으면 수정도 되면서 복제본이 추가됨
             #print(event.user)
-        return super().post(request, *args, **kwargs)
+            
+            response_data['result'] = 'success'
+        else :
+            response_data['result'] = 'fail'
+        return HttpResponse(json.dumps(response_data), content_type="application/json")    
+        #return super().post(request, *args, **kwargs)
             
     
 @staff_member_required
@@ -362,11 +371,13 @@ class EventListView(ListView):
         now = timezone.now() 
         year_list = [i for i in range(now.year-1, now.year+2)]
         month_list = [i for i in range(1, 13)]
-        show_list = {0:'모두보기', 1:'접수중'}
+        show_list = {0:'전체보기', 1:'접수 중'}
         context['show_list'] = show_list
         page = context['page_obj']
         paginator = page.paginator
+        
         context['total'] = paginator.count
+        context['num_pages'] = paginator.num_pages
         pagelist = paginator.get_elided_page_range(page.number, on_each_side=3, on_ends=0)
         context['pagelist'] = pagelist        
         context['today_date'] = now         
@@ -706,7 +717,7 @@ class ApplicationCancelView(UpdateView):
             context = {
                     'form': form, 
                     }
-            context['grades'] = Grades.objects.order_by("id")
+            #context['grades'] = Grades.objects.order_by("id")
             context['application'] = originApplication
             return render(request, self.template_name, context)
 

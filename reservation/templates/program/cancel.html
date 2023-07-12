@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% block extrahead %}
+    {% load static %}
+    <script src="{% static 'reservations/js/apply.js' %}"></script>
+{% endblock %}
 {% block content %}
     {% load static %}
     <div id="containerWrap">
@@ -33,7 +37,7 @@
                     </div>
                     <div class="bt-wrap">
                         <input type="hidden" value="{{application.id}}" name="application_id"/>
-                        <input type="submit" value="신청 취소" class="bt1 on">
+                        <input type="submit" value="신청 취소" class="bt1 on" onclick="userConfirm('신청취소 하시겠습니까?')">
                         <a href="{% url 'reservations:applyList' %}" class="bt1">이전 페이지로 이동</a>
                     </div>
                 </form>

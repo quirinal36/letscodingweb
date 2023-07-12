@@ -110,7 +110,7 @@ class SignUpForm(UserCreationForm):
     
     # save 매서드로 DB에 저장
     def save(self, *args, **kwargs):
-        print("save method")
+        
         user = super().save(commit=False) # Object는 생성하지만, 저장은 하지 않습니다.
         #email = self.cleaned_data.get("email")
         phone_number = self.clean_phone_number()
@@ -123,9 +123,8 @@ class SignUpForm(UserCreationForm):
         user.phone_number = phone_number
         user.set_password(password) # set_password는 비밀번호를 해쉬값으로 변환해요!
         user.name = name
-        user.school = school
-        print(user)
-        print("before user save")
+        user.school = school       
+        
         user.save() # 이제 저장해줄께요:)   
         return user 
     
@@ -133,11 +132,52 @@ class EventForm(forms.ModelForm):
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     #stay = forms.ChoiceField(choices = Event.STAY_CHOICES)
     #section = forms.CharField()
+    start_date = forms.DateField(
+        label = '시작날짜',
+        widget=forms.DateInput(
+            format='%Y-%m-%d', 
+            attrs={'class':'datetimepicker-input ipt1'}
+        ), 
+        input_formats = '%Y-%m-%d',
+        )
+    finish_date = forms.DateField(
+        label = '종료날짜 ',
+        widget=forms.DateInput(
+            format='%Y-%m-%d', 
+            attrs={'class':'datetimepicker-input ipt1'}
+        ), 
+        input_formats = '%Y-%m-%d',
+        )
+    apply_start = forms.DateField(
+        label = '접수시작',
+        widget=forms.DateInput(
+            format='%Y-%m-%d', 
+            attrs={'class':'datetimepicker-input ipt1'}
+        ), 
+        input_formats = '%Y-%m-%d',
+        )
+    deadline = forms.DateField(
+        label = '접수마감',
+        widget=forms.DateInput(
+            format='%Y-%m-%d', 
+            attrs={'class':'datetimepicker-input ipt1'}
+        ), 
+        input_formats = '%Y-%m-%d',
+        )
     
     class Meta:
         model = Event
         fields = ('start_date', 'finish_date', 'apply_start', 'deadline', 'capacity')
+    def is_valid(self):
+        valid = super(EventForm, self).is_valid()
         
+        start_date = self.cleaned_data.get("start_date")
+        finish_date = self.cleaned_data.get("finish_date")
+        apply_start = self.cleaned_data.get("apply_start")
+        deadline = self.cleaned_data.get("deadline")
+        print(f"start_date:{start_date}, finish_date:{finish_date}, apply_start:{apply_start}, deadline:{deadline}")
+        
+        return True    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         """
@@ -146,7 +186,7 @@ class EventForm(forms.ModelForm):
             self.fields[field_name].widget.attrs.update({
                 'class': 'ipt1'
             })
-        """
+        
         self.fields['start_date'].widget.attrs.update({
             'class': 'datetimepicker-input ipt1',
             'autocomplete' : 'off',
@@ -162,23 +202,25 @@ class EventForm(forms.ModelForm):
             'autocomplete' : 'off',
             'placeholder' : '접수 마감일'
         })
+        
         self.fields['apply_start'].widget.attrs.update({
             'class': 'datetimepicker-input ipt1',
             'autocomplete' : 'off',
             'placeholder' : '접수 시작일'
         })
+        """
         self.fields['capacity'].widget.attrs.update({
             'class': 'ipt1',
             'autocomplete' : 'off',
             'placeholder' : '모집 인원을 입력하세요.'
         })
         
+        
 class GradeModelChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
         return obj.tgrade
     
-class ApplyForm(forms.ModelForm):
-    
+class ApplyForm(forms.ModelForm):    
     
     class Meta:
         model = Application
@@ -228,20 +270,22 @@ class ApplyForm(forms.ModelForm):
         required=True,
     )
     school = forms.CharField(
-        label = '학교',
+        label = '학교명',
         required=True,
         max_length=50,
-        widget=forms.TextInput(attrs={'placeholder':'학교이름을 입력하세요.'}),
+        widget=forms.TextInput(attrs={'placeholder':'학교명 입력'}),
     )
     students = forms.IntegerField(
-        label = '신청 인원',
+        min_value = 0,
+        label = '신청인원',
         required=True,
-        widget=forms.NumberInput(attrs={'placeholder':'신청인원을 입력하세요.'}),
+        widget=forms.NumberInput(attrs={'placeholder':'신청인원 입력'}),
     )
     numOfClasses = forms.IntegerField(
-        label = '학급수',
+        min_value = 0,
+        label = '학급 수',
         required=True,
-        widget=forms.NumberInput(attrs={'placeholder':'신청학급수를 입력하세요.'}),
+        widget=forms.NumberInput(attrs={'placeholder':'학급 수 입력'}),
     )
         
     def is_valid(self):
@@ -318,25 +362,12 @@ class ApplicationCancelForm(forms.ModelForm):
     
     class Meta:
         model = Application
-        fields = ('school', 'students', 'grade', 'numOfClasses', 'phone_number', 'password')
+        fields = ('password',)
     
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if "instance" in kwargs:
-            application = kwargs["instance"]
-            grade_id = application.grade.id
-            self.fields['grade'].initial = grade_id
-        
-        class_update_fields = ['school', 'students', 'grade', 'numOfClasses', 'phone_number','password']
-        for field_name in class_update_fields:
-            if field_name == 'password':
-                self.fields[field_name].widget.attrs.update({
+        super().__init__(*args, **kwargs)        
+        self.fields['password'].widget.attrs.update({
                     'class': 'ipt1',
-                })
-            else :
-                self.fields[field_name].widget.attrs.update({
-                    'class': 'ipt1',
-                    'readonly': 'True',
                 })
     
     def clean(self, *args, **kwargs):
@@ -360,11 +391,4 @@ class ApplicationCancelForm(forms.ModelForm):
         label = '비밀번호',
         max_length=50, 
         widget=forms.PasswordInput(attrs={'placeholder':'비밀번호를 입력하세요.'})
-    )
-    grade = GradeModelChoiceField(
-        label = '학년',
-        empty_label="학년을 선택해 주세요.",
-        queryset = Grades.objects.all(),
-        to_field_name="id",
-        required=True,
     )

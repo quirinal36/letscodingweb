@@ -1,40 +1,23 @@
 function deleteEvent(eventId){
-    
-    $("<div></div>").appendTo('body')
-    .attr("id", "dialog")
-    .html('<div><h3>정말 이 글을 삭제하시겠습니까?</h3></div>')
-    .dialog({
-        title: "식제" ,
-        width:500, height:140,
-        modal:true,
-        resizable: false, 
-        show: { effect: 'drop', direction: "left" }, 
-        hide: { effect:'blind' },
-        buttons: {
-            Yes: function() {
-                $.ajax({
-                    type:"POST", //post data
-                    // data:{'key':key}, //if you want to send any data to view 
-                    url:'/reservation/event/delete/'+eventId, // your url that u write in action in form tag
-                    dataType:"json",
-                    success: function(r){
-                        if(r.result == 'success'){    
-                            parent.location.reload(true);
-                        }else{
-                            console.log(r.message);
-                        }
-                    }
-                })
-            },
-            Cancel: function() {
-                $( this ).dialog( "close" );
+    if (confirm("정말 이 글을 삭제하시겠습니까?")){
+        $.ajax({
+            type:"POST", //post data
+            // data:{'key':key}, //if you want to send any data to view 
+            url:'/reservation/event/delete/'+eventId, // your url that u write in action in form tag
+            dataType:"json",
+            success: function(r){
+                if(r.result == 'success'){
+                    alert("삭제되었습니다.")
+                    parent.location.reload(true);
+                }else{
+                    console.log(r.message);
+                }
             }
-        }
-    });  
+        })
+    }
 }
 
 // django 의 csrf 토큰 문제를 해결하기 우해 필요함
-
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {

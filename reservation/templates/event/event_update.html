@@ -1,35 +1,37 @@
 {% extends 'base.html' %}
-
-{% block content %}
+{% block extrahead %}
 <script type="text/javascript">
-var inputElement = document.getElementById("submitButton")
-inputElement.addEventListener("Click", function() {
-    if confirm('입력하신 정보대로 수정하시겠습니까?') {
-        document.getElementById("updateForm").submit()
-    } else {
-        return false;
-    }
-});
-
-$(function () {
     
-    $(".datetimepicker-input").datepicker({ 
-        lang: "ko",
-        dateFormat: "yy-mm-dd" ,
-        closeText: "닫기",
-        currentText: "오늘",
-        prevText: '이전 달',
-        nextText: '다음 달',
-        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
-        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-        weekHeader: "주",
-        yearSuffix: '년'
+    $("submit").on("click", function() {
+        if (confirm('입력하신 정보대로 수정하시겠습니까?') == true){
+            document.getElementById("updateForm").submit()
+        } else {
+            return false;
+        }
     });
-});
+    
+    $(function () {
+        
+        $(".datetimepicker-input").datepicker({ 
+            lang: "ko",
+            dateFormat: "yy-mm-dd" ,
+            closeText: "닫기",
+            currentText: "오늘",
+            prevText: '이전 달',
+            nextText: '다음 달',
+            monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+            dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+            dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+            weekHeader: "주",
+            yearSuffix: '년'
+        });
+    });
 </script>
+{% endblock %}
+{% block content %}
+
 <div id="containerWrap">
     <div class="title-style1">
         <div class="layout-center">
@@ -38,7 +40,7 @@ $(function () {
     </div>
     <div class="layout-center">
         <div class="form-style1">
-            <form method="post" id="updateForm" >
+            <form method="post" id="updateForm" action="{% url 'reservations:eventUpdate' event.id%}">
                 {% csrf_token %}
                 <div class="box">
                     <ul>
@@ -51,10 +53,10 @@ $(function () {
                             </select>
                         </li>
                         {% for field in form %}
-                            {% if field.html_name == 'start_date' or field.html_name == 'finish_date'%}
+                            {% if field.html_name == 'start_date' or field.html_name == 'finish_date' or field.html_name == 'apply_start' or field.html_name == 'deadline'%}
                             <li>
                                 {{field.label}}
-                                {{field}}
+                                {{field }}
                                 {{field.errors}}    
                             </li>
                             {% elif field.html_name == 'user'%}

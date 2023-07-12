@@ -70,13 +70,17 @@
                                     </td>
 
                                     <td>
+                                        {% if application.confirmed == False %}
                                         <a href="{% url 'reservations:applicationUpdate' application.id%}" class="bt2">수정</a>
+                                        {% endif %}
                                     </td>
                                     <td>
                                         {% if application.canceled %}
-                                            취소완료
+                                            취소됨
                                         {% else %}
-                                            <a href="{% url 'reservations:applicationCancel' application.id%}" class="bt2">취소</a>
+                                            {% if application.confirmed == False %}
+                                                <a href="{% url 'reservations:applicationCancel' application.id%}" class="bt2">취소</a>
+                                            {% endif %}
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -86,11 +90,29 @@
                     </div>
                 </div>
             </form>
-            {% comment %}
-            <div class="bt-wrap">
-                <a href="#" onclick="javascript:alert('선택된 항목이 없습니다.');" class="bt1">신청 취소</a>
+            <div class="page-wrap">
+                <a href="javascript:void(0);" onclick="javascript:page('1')" class="page-bt prev"><img src="/static/reservations/img/page-prev.png" alt="처음"></a>
+                {% if page_obj.has_previous %}
+                    <a href="javascript:void(0);" onclick="javascript:page('{{page_obj.previous_page_number}}')" class="page-bt prev"><img src="/static/reservations/img/page-prev.png" alt="이전"></a>
+                {% endif %}
+
+                {% for index in pagelist %}
+                    {% if index == page_obj.number %}
+                        <li class="page-item active">
+                            <span class="page-link">{{index}}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0);" onclick="javascript:page('{{index}}')">{{index}}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{page_obj.next_page_number}}" class="page-bt next"><img src="/static/reservations/img/page-next.png" alt="다음"></a>
+                {% endif %}
+                <a href="javascript:void(0);" onclick="javascript:page('{{num_pages}}')" class="page-bt next"><img src="/static/reservations/img/page-next.png" alt="마지막"></a>
             </div>
-            {% endcomment %}
         </div>
     </div>    
 {% endblock %}    
