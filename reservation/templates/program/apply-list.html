@@ -11,26 +11,25 @@
     
     <div id="containerWrap">
         <div class="title-style1">
-            <div class="layout-center">
+            <div>
                 <strong>교육 신청내역</strong>
             </div>
         </div>
         <div class="layout-center">
-            <div class="tbl-wrap scroll">
-                <div>
-                    
-                    <form>
-                        <p>
-                            {{form.phone_number}}
-                            <input type="button" value="검색" onclick="javascript:searchList(this);">
-                        </p>
+            <form>
+                <div class="search-box">
+                    {{form.phone_number}}
+                    <input type="button" value="검색" onclick="javascript:searchList(this);">
+                </div>
+                <div class="tbl-wrap scroll">
+                    <div>
                         <table class="tbl1">
                             <thead>
                                 <tr>
-                                    <th>행사명</th>
-                                    <th>기간</th>
-                                    <th>신청인원</th>
+                                    <th>교육명</th>
+                                    <th>교육기간</th>
                                     <th>운영일수</th>
+                                    <th>신청인원</th>
                                     <th>신청일시</th>
                                     <th>확정 유/무</th>
                                     <th>수정</th>
@@ -48,8 +47,8 @@
                                         ~
                                         {{application.event.finish_date}}
                                     </td>
-                                    <td>{{application.students}}명</td>
                                     <td>{{application.event.period}}</td>
+                                    <td>{{application.students}}명</td>
                                     <td>
                                         {{application.create_date}}
                                     </td>
@@ -60,7 +59,7 @@
                                             미확정
                                         {% endif %}
                                         <p>
-                                            <a href="{% url 'reservations:applicationConfirm' application.id %}">
+                                            <a href="{% url 'reservations:applicationConfirm' application.id %}" class="bt2 mt-5">
                                                 {% if user.is_authenticated and application.confirmed == False%}
                                                     확정처리
                                                 {% elif user.is_authenticated %}
@@ -71,22 +70,22 @@
                                     </td>
 
                                     <td>
-                                        <a href="{% url 'reservations:applicationUpdate' application.id%}">수정하기</a>
+                                        <a href="{% url 'reservations:applicationUpdate' application.id%}" class="bt2">수정</a>
                                     </td>
                                     <td>
                                         {% if application.canceled %}
                                             취소완료
                                         {% else %}
-                                            <a href="{% url 'reservations:applicationCancel' application.id%}">취소하기</a>
+                                            <a href="{% url 'reservations:applicationCancel' application.id%}" class="bt2">취소</a>
                                         {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            </form>
             {% comment %}
             <div class="bt-wrap">
                 <a href="#" onclick="javascript:alert('선택된 항목이 없습니다.');" class="bt1">신청 취소</a>

@@ -42,6 +42,14 @@ $(function () {
                 {% csrf_token %}
                 <div class="box">
                     <ul>
+                        <li>
+                            <label for="programs">교육명</label>
+                            <select name="program" id="programs" class="select1 w100">
+                                {% for program in programs %}
+                                    <option value="{{program.id}}">{{program.title}}</option>
+                                {% endfor %}
+                            </select>
+                        </li>
                         {% for field in form %}
                             {% if field.html_name == 'start_date' or field.html_name == 'finish_date'%}
                             <li>
@@ -60,8 +68,11 @@ $(function () {
                             {% endif %}
                         {% endfor%}
                     </ul>
-                    
-                    <input type="submit" >
+                </div>
+                <div class="bt-wrap">
+                    <input type="hidden" value="{{event.id}}" name="event_id"/>
+                    <input type="submit" value="교육 수정" class="bt1 on">
+                    <a href="#" onClick="history.back()" class="bt1">이전 페이지로 이동</a>
                 </div>
             </form>
         </div>

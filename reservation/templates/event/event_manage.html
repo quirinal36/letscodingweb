@@ -15,8 +15,8 @@
 {% block content %}
 <div id="containerWrap">
     <div class="title-style1">
-        <div class="layout-center">
-            <strong>교육 리스트 관리</strong>
+        <div>
+            <strong>교육 관리</strong>
         </div>
     </div>
     <div class="layout-center">
@@ -26,42 +26,43 @@
                     <table class="tbl1">
                         <thead>
                             <tr>
-                                <th>기간</th>
-                                <th>접수기간</th>
                                 <th>교육명</th>
+                                <th>교육기간</th>
                                 <th>운영일수</th>
                                 <th>모집인원</th>
-                                <th></th>
+                                <th>접수기간</th>
+                                <th>수정</th>
+                                <th>삭제</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for item in event_list %}
                             <tr data-value={{item.id}}>
-                                
+                                <td>
+                                    <a href="{% url 'reservations:eventDetail' item.id %}">
+                                        {{ item.program.title }}
+                                    </a>
+                                </td>
                                 <td>
                                     {{item.start_date | date:'Y-m-d'}} 
                                     ~ 
                                     {{item.finish_date | date:'Y-m-d'}} 
                                 </td>
+                                <td>{{item.period}}</td>
+                                <td>{{item.capacity}}</td>
                                 <td>
                                     {{item.apply_start | date:'Y-m-d'}} 
                                     ~ 
                                     {{item.deadline | date:'Y-m-d'}} 
                                 </td>
                                 <td>
-                                    <a href="{% url 'reservations:eventDetail' item.id %}">
-                                        {{ item.program.title }}
-                                    </a>
-                                </td>
-                                <td>{{item.period}}</td>
-                                <td>{{item.capacity}}</td>
-                                <td>
                                     {% if item.user == request.user %}
-                                    <a href="{% url 'reservations:eventUpdate' item.id %}">
+                                    <a href="{% url 'reservations:eventUpdate' item.id %}" class="bt2">
                                         수정
                                     </a>
-                                    /
-                                    <a class="event-delete" onclick="javascript:deleteEvent({{item.id}})" href="javascript:void(0);">
+                                </td>
+                                <td>
+                                    <a class="event-delete bt2" onclick="javascript:deleteEvent({{item.id}})" href="javascript:void(0);">
                                         삭제
                                     </a>
                                     {% endif %}
@@ -71,33 +72,31 @@
                         </tbody>
                     </table>
                 </form>
-                <p class="text-center">
-                    <h5>
-                        {% if page_obj.has_previous %}
-                            <a href="?page={{page_obj.previous_page_number}}">Prev</a>
-                        {% endif %}
+                <div class="page-wrap">
+                    {% if page_obj.has_previous %}
+                        <a href="javascript:void(0);" onclick="javascript:page('{{page_obj.previous_page_number}}')" class="page-bt prev"><img src="/static/reservations/img/page-prev.png" alt="이전"></a>
+                    {% endif %}
 
-                        {% for index in pagelist %}
-                            {% if index == page_obj.number %}
-                                <li class="page-item active">
-                                    <span class="page-link">{{index}}</span>
-                                </li>
-                            {% else %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{index}}">{{index}}</a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-
-                        {% if page_obj.has_next %}
-                            <a href="?page={{page_obj.next_page_number}}">Next</a>
+                    {% for index in pagelist %}
+                        {% if index == page_obj.number %}
+                            <li class="page-item active">
+                                <span class="page-link">{{index}}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{index}}">{{index}}</a>
+                            </li>
                         {% endif %}
-                    </h5>
-                </p>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{page_obj.next_page_number}}" class="page-bt next"><img src="/static/reservations/img/page-next.png" alt="다음"></a>
+                    {% endif %}
+                </div>
             </div>
         </div>
         <div class="bt-wrap">
-            <a href="{% url 'reservations:eventCreate' %}" class="bt1 on">교육 생성</a>
+            <a href="{% url 'reservations:eventCreate' %}" class="bt1 on">교육 등록</a>
         </div>
     </div>
 </div>

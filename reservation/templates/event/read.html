@@ -1,22 +1,142 @@
 {% extends 'base.html' %}
-
-{% block content %}
-<div id="containerWrap">
-    <div class="title-style1">
-        <div class="layout-center">
-            <strong>교육</strong>
-        </div>
-    </div>
-    <div class="layout-center">
-        {% for label, value in event.get_fields %}
-            <p>
-                {{label}} : {{value}}
-            </p>
-        {% endfor %}
-        {% if event.user.id == user.id %}
-            <a href="{% url 'reservations:eventUpdate' event.id %}"/>수정</a>
-            <a href="{% url 'reservations:eventDelete' event.id %}"/>삭제</a>
-        {% endif %}
-    </div>
-</div>
+{% block extrahead %}
+    {% load static %}
+    <script src="{% static 'reservations/js/apply.js' %}"></script>
+    <link rel="stylesheet" href="{%static 'reservations/css/paging.css'%}"/>
+    <style>
+        
+    </style>
 {% endblock %}
+{% block content %}
+    
+    <div id="containerWrap">
+        <div class="title-style1">
+            <div>
+                <strong>교육 신청내역</strong>
+            </div>
+        </div>
+        <div class="layout-center">
+            <form>
+                <!--
+                <div class="search-box">
+                    {{form.phone_number}}
+                    <input type="button" value="검색" onclick="javascript:searchList(this);">
+                </div>
+                -->
+                <div class="title-box mt-0">
+                    <strong>교육 정보</strong>
+                </div>
+                <div class="tbl-wrap scroll">
+                    <table class="tbl1 type2">
+                        <colgroup>
+                            <col width="15%">
+                            <col width="35%">
+                            <col width="15%">
+                            <col width="35%">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>교육명</th>
+                                <td>공유학교(숙박형)</td>
+                                <th>교육기간</th>
+                                <td>2023-07-26 ~ 2023-07-28</td>
+                            </tr>
+                            <tr>
+                                <th>운영일수</th>
+                                <td>3일</td>
+                                <th>모집인원</th>
+                                <td>15명</td>
+                            </tr>
+                            <tr>
+                                <th>접수기간</th>
+                                <td>2023-07-03 ~ 2023-07-07</td>
+                                <th>접수인원</th>
+                                <td>24명</td>
+                            </tr>
+                        <tbody>
+                    </table>
+                </div>
+                <div class="title-box">
+                    <strong>모집내용</strong>
+                </div>
+                <div class="tbl-wrap scroll">
+                    <div>
+                        <table class="tbl1">
+                            <thead>
+                                <tr>
+                                    <th>신청일시</th>
+                                    <th>학교명</th>
+                                    <th>학년</th>
+                                    <th>학급수</th>
+                                    <th>신청인원</th>
+                                    <th>전화번호</th>
+                                    <th>확정 유/무</th>
+                                    <th>수정</th>
+                                    <th>취소</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2023년 7월 11일 12:41 오후</td>
+                                    <td>용인초등학교</td>
+                                    <td>4학년</td>
+                                    <td>4</td>
+                                    <td>10명</td>
+                                    <td>010-1234-5678</td>
+                                    <td>
+                                        미확정<br>
+                                        <a href="#" class="bt2 mt-5">확정처리</a>
+                                    </td>
+                                    <td><a href="#" class="bt2">수정</a></td>
+                                    <td><a href="#" class="bt2">취소</a></td>
+                                </tr>
+                                {% for application in apply_list %}
+                                <tr>
+                                    <td>{{application.students}}명</td>
+                                    <td>
+                                        {{application.create_date}}
+                                    </td>
+                                    <td>
+                                        {% if application.confirmed %}
+                                            확정
+                                        {% else %}
+                                            미확정
+                                        {% endif %}
+                                        <p>
+                                            <a href="{% url 'reservations:applicationConfirm' application.id %}" class="bt2">
+                                                {% if user.is_authenticated and application.confirmed == False%}
+                                                    확정처리
+                                                {% elif user.is_authenticated %}
+                                                    확정취소
+                                                {% endif %}
+                                            </a>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'reservations:applicationUpdate' application.id%}" class="bt2">수정</a>
+                                    </td>
+                                    <td>
+                                        {% if application.canceled %}
+                                            취소완료
+                                        {% else %}
+                                            <a href="{% url 'reservations:applicationCancel' application.id%}" class="bt2">취소</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="bt-wrap">
+                    <a href="/reservation/event/manage/" class="bt1 on">목록</a>
+                </div>
+            </form>
+            {% comment %}
+            <div class="bt-wrap">
+                <a href="#" onclick="javascript:alert('선택된 항목이 없습니다.');" class="bt1">신청 취소</a>
+            </div>
+            {% endcomment %}
+        </div>
+    </div>    
+{% endblock %}    

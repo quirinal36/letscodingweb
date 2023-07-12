@@ -2,8 +2,123 @@
 {% load static %}
 {% block extrahead %}
     <link rel="stylesheet" href="{%static 'reservations/css/paging.css'%}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
     <style>
-        
+       :root {
+            --swiper-theme-color: #bd445b;
+        }
+        .idx-visual-wrap {
+            background: url(/static/reservations/img/bg.svg) no-repeat 50% 50% /cover;
+            text-align: center;
+        }
+
+        .idx-visual-wrap > div {
+            padding: 120px 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .idx-visual-wrap p {
+            font-size: 3rem;
+            color: #fff;
+            letter-spacing: -1px;
+            font-weight: 300;
+        }
+
+        .idx-visual-wrap strong {
+        line-height: 120%;
+            font-size: 10rem;
+            color: #fff;
+        }
+
+        .idx-visual-wrap .links {
+            margin-top: 80px;
+            font-size: 0;
+        }
+
+        .idx-visual-wrap .links a {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 15px 20px 18px 20px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.6);
+            line-height: 100%;
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+        .idx-visual-wrap .links a.on {
+            background: linear-gradient(to right, #a0293f, #c0314c);
+        }
+
+        .idx-visual-wrap .links a:first-child {
+            margin-left: 0;
+        }
+
+        .idx-video-wrap {
+            position: relative;
+            width: 1000px;
+            margin: 100px auto 60px auto;
+        }
+
+        .idx-video-wrap strong {
+            line-height: 130%;
+            font-size: 6rem;
+            
+        }
+
+        .idx-video-wrap .video-wrap {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .idx-video-wrap .video-wrap iframe {
+            width: 400px;
+            height: 225px;
+        }
+
+    .slider-wrap {
+        position: relative;
+        width: 1000px;
+        height: 300px;
+        margin: 0 auto 120px auto;
+    }
+    
+    .swiper {
+      width: 100%;
+      height: 100%;
+    }
+
+    .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #eee;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .swiper-button-prev {
+        left: -70px !important;
+    }
+
+    .swiper-button-next {
+        right: -70px !important;
+    }
+
+    .swiper-pagination {
+        bottom: -40px !important;
+    }
+
+    
     </style>
 {% endblock %}
 
@@ -30,6 +145,61 @@
             {% endfor %}
         </ol>
     {% endcomment %}
-        
+        <div class="idx-visual-wrap">
+            <div>
+                <p>우리 지역의 시설과 전문가를 공유하다.</p>
+                <strong>
+                    용인형<br>
+                    공유학교
+                </strong>
+                <div class="links">
+                    <a href="#">메타버스 입장하기</a>
+                    <a href="#" class="on">교육 신청</a>
+                </div>
+            </div>
+        </div>
+        <div class="idx-video-wrap">
+            <strong>
+                용인형<br>
+                공유학교<br>
+                소개
+            </strong>
+            <div class="video-wrap">
+                <iframe src="https://www.youtube.com/embed/X9n4zaUnMUo" title="[용인시정뉴스] 적극행정 이상일 용인특례시장, 동백고등학교 방문" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+        </div>
+        <div class="slider-wrap">
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">Slide 1</div>
+                    <div class="swiper-slide">Slide 2</div>
+                    <div class="swiper-slide">Slide 3</div>
+                    <div class="swiper-slide">Slide 4</div>
+                    <div class="swiper-slide">Slide 5</div>
+                    <div class="swiper-slide">Slide 6</div>
+                    <div class="swiper-slide">Slide 7</div>
+                    <div class="swiper-slide">Slide 8</div>
+                    <div class="swiper-slide">Slide 9</div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+        <script>
+            var swiper = new Swiper(".mySwiper", {
+                slidesPerView: 3,
+                spaceBetween: 30,
+                pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+            });
+        </script>
     </div>
 {% endblock %}

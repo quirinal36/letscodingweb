@@ -4,6 +4,16 @@
     {% block extrahead %}
     <link rel="stylesheet" href="{%static 'css/member.css'%}"/>
     <script src="{%static 'js/member.js'%}"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const labels = document.querySelectorAll('label');
+            labels.forEach((label) => {
+            const labelText = label.textContent;
+            const modifiedText = labelText.replace(':', '');
+                label.textContent = modifiedText;
+            });
+        });
+    </script>
     {% endblock %}
 </head>
 {% block content %}
@@ -17,13 +27,15 @@
             <!-- 회원가입 -->
             <div class="form-style1">
                 <form method="post" action="{% url 'reservations:login' %}">
+                    {% csrf_token %}
                     <div class="box">
-                        {% csrf_token %}
-                        {{ form.as_p }}
+                        <ul>
+                            {{ form.as_ul }}
+                        </ul>
                     </div>
                     <div class="bt-wrap">
                         <input type="submit" value="로그인" class="bt1 on">
-                        <a href="#" onClick="history.back()" class="bt1">취소</a>
+                        <a href="#" onClick="history.back()" class="bt1">이전 페이지로 이동</a>
                     </div>
                     <input type="hidden" name="next" value="{{ next }}">
                     

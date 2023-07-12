@@ -12,30 +12,6 @@
                 <form method="POST">
                     {% csrf_token %}
                     <div class="box">
-
-                        <dl>
-                            <dt>교육명</dt>
-                            <dd>
-                                {{application.event.program.title}} 
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>교육기간</dt>
-                            <dd>
-                                {{application.event.start_date}} 
-                                ~
-                                {{application.event.finish_date}}
-                                 ({{application.event.period}}일)
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>접수기간</dt>
-                            <dd>
-                                {{application.event.apply_start | date:'Y년-m월-d일'}} 
-                                ~
-                                {{application.event.deadline | date:'Y년-m월-d일'}}
-                            </dd>
-                        </dl>
                         {% for field in form %}
                             <dl>
                                 <dt>{{field.label}}</dt>
@@ -57,8 +33,8 @@
                     </div>
                     <div class="bt-wrap">
                         <input type="hidden" value="{{application.id}}" name="application_id"/>
-                        <input type="submit" value="취소신청" class="bt1 on">
-                        <a href="{% url 'reservations:applyList' %}" class="bt1">뒤로가기</a>
+                        <input type="submit" value="신청 취소" class="bt1 on">
+                        <a href="{% url 'reservations:applyList' %}" class="bt1">이전 페이지로 이동</a>
                     </div>
                 </form>
             </div>

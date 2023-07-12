@@ -31,9 +31,28 @@ html.noScroll {
     color: #fff !important;
 }
 
+.bt2 {
+    display: inline-block;
+    padding: 4px 5px 5px 5px;
+    border: 1px solid #000;
+    border-radius: 2px;
+    line-height: 100%;
+    font-size: 1.4rem;
+}
+
+.bt2.on {
+    background: #333;
+    color: #fff !important;
+}
+
+.bt2.mt-5 {
+    margin-top: 5px;
+}
+
 .ipt1 {
     width: 100%;
-    padding: 5px 5px 10px 5px;
+    height: 40px;
+    padding: 0 20px 0 0;
     box-sizing: border-box;
     border-bottom: 1px solid #000;
     font-size: 1.6rem;
@@ -45,28 +64,40 @@ html.noScroll {
 }
 
 .tbl-wrap {
-    margin: 60px 0;
+
 }
 
 .tbl1 {
     width: 100%;
+    border-top: 1px solid #000;
+}
+
+.tbl1 thead  {
+    border-bottom: 1px solid #ddd;
 }
 
 .tbl1 thead th {
-    background: #f5f5f5;
     text-align: center;
-    font-size: 1.6rem;
+    font-size: 1.4rem;
 }
 
 .tbl1 th,
 .tbl1 td {
     padding: 15px;
     text-align: center;
-    font-size: 1.6rem;
+    font-size: 1.4rem;
 }
 
 .tbl1 tbody tr {
     border-bottom: 1px solid #ddd;
+}
+
+.tbl1.type2 th {
+    background: #f5f5f5;
+}
+
+.tbl1.type2 td {
+    text-align: left;
 }
 
 @media ( max-width: 1000px ) {
@@ -117,4 +148,41 @@ html.noScroll {
     .bt-wrap {
         margin: 20px 0;
     }
+}
+
+.select1 {
+    padding: 10px 25px 10px 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    background: url(../img/select1-arrow.png) no-repeat calc(100% - 8px) 50% /10px;
+    font-size: 1.4rem;
+}
+
+.select2 {
+    padding-right: 20px;
+    vertical-align: middle;
+    background: url(../img/select2-arrow.png) no-repeat 100% 50% /12px;
+    text-align: right;
+    font-size: 3rem;
+}
+
+.select2 + span {
+    display: inline-block;
+    margin-left: 5px;
+    vertical-align: middle;
+    font-size: 2rem;
+}
+
+.title-box {
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.title-box.mt-0 {
+    margin-top: 0;
+}
+
+.title-box strong {
+    font-size: 2rem;
+    font-weight: 500;
 }

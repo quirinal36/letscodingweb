@@ -4,33 +4,23 @@
     <script src="{%static 'reservations/js/class.js'%}"></script>
     <link rel="stylesheet" href="{%static 'reservations/css/paging.css'%}"/>
     <style>
-        
+
     </style>
 {% endblock %}
 {% block content %}
     
     <div id="containerWrap">
         <div class="title-style1">
-            <div class="layout-center">
-                <strong>교육 리스트</strong>
+            <div>
+                <strong>교육 신청</strong>
             </div>
         </div>
         <div class="layout-center">
-            <div class="tbl-wrap scroll">
-                <div>
-                    <form id="eduList">
-                        <select name="enabled" class="search_option">
-                            {% for key, val in show_list.items %}
-                                {% if enabled == key %}
-                                <option value="{{key}}" selected>{{val}}</option>
-                                {% else %}
-                                <option value="{{key}}" >{{val}}</option>
-                                {% endif %}
-                            {% endfor %}
-                            
-                        </select>
-                        
-                        <select name="year" class="search_option">
+            <form id="eduList">
+                <div class="apply-list-top">
+                    <div class="total">총 {{total}}건</div>
+                    <div class="month-select">
+                        <select name="year" class="search_option select2">
                             <option value="">연도</option>
                             {% for year in year_list%}
                                 {% if cur_year == year %}
@@ -38,13 +28,14 @@
                                         {{year}}
                                     </option>
                                 {% else %}
-                                    <option value="{{year}}" >
+                                    <option value="{{year}}">
                                         {{year}}
                                     </option>                            
                                 {% endif %}
                             {% endfor %}
                         </select>
-                        <select name="month" class="search_option">
+                        <span>년</span>
+                        <select name="month" class="search_option select2">
                             <option value="">월</option>
                             {% for month in month_list%}
                                 {% if cur_month == month %} 
@@ -58,90 +49,140 @@
                                 {% endif %}
                             {% endfor %}
                         </select>
-                        검색결과 : {{total}}건
-                        <table class="tbl1">
-                            <thead>
-                                <tr>
-                                    <th>기간</th>
-                                    <th>접수기간</th>
-                                    <th>교육명</th>
-                                    <th>운영일수</th>
-                                    <th>모집인원</th>
-                                    <th>상태</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in event_list %}
-                                <tr>
-                                    
-                                    <td>
-                                        {{item.start_date | date:'Y-m-d'}} 
-                                        ~ 
-                                        {{item.finish_date | date:'Y-m-d'}} 
-                                    </td>
-                                    <td>
-                                        {{item.apply_start | date:'Y-m-d'}} 
-                                        ~ 
-                                        {{item.deadline | date:'Y-m-d'}} 
-                                    </td>
-                                    <td>
-                                        <a href="{% url 'reservations:applyForm' item.id %}">
-                                            {{ item.program.title }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        {{item.period}}
-                                    </td>
-                                    <td>
-                                        {{item.capacity}}
-                                    </td>
-                                    <td>
-                                        {% if item.apply_start <= today_date and item.deadline >= today_date%}
-                                        접수중
-                                        {% elif item.apply_start > today_date %}
-                                        접수대기
-                                        {% elif item.deadline < today_date%}
-                                        접수마감
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </form>
+                        <span>월</span>
+                    </div>
+                    <div class="apply-select">
+                        <select name="enabled" class="search_option select1">
+                            {% for key, val in show_list.items %}
+                                {% if enabled == key %}
+                                <option value="{{key}}" selected>{{val}}</option>
+                                {% else %}
+                                <option value="{{key}}" >{{val}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
-            </div>
+
+
+                <!--
+                <select name="enabled" class="search_option">
+                    {% for key, val in show_list.items %}
+                        {% if enabled == key %}
+                        <option value="{{key}}" selected>{{val}}</option>
+                        {% else %}
+                        <option value="{{key}}" >{{val}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <select name="year" class="search_option">
+                    <option value="">연도</option>
+                    {% for year in year_list%}
+                        {% if cur_year == year %}
+                            <option value="{{year}}" selected>
+                                {{year}}
+                            </option>
+                        {% else %}
+                            <option value="{{year}}" >
+                                {{year}}
+                            </option>                            
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <select name="month" class="search_option">
+                    <option value="">월</option>
+                    {% for month in month_list%}
+                        {% if cur_month == month %} 
+                            <option value="{{month}}" selected >
+                                {{month}}
+                            </option>
+                        {% else %}
+                            <option value="{{month}}" >
+                                {{month}}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                -->
+                <div class="tbl-wrap scroll">
+                    <table class="tbl1">
+                        <thead>
+                            <tr>
+                                <th>교육명</th>
+                                <th>교육기간</th>
+                                <th>운영일수</th>
+                                <th>모집인원</th>
+                                <th>신청기간</th>
+                                <th>신청</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in event_list %}
+                            <tr>
+                                <td>
+                                    {{ item.program.title }}
+                                </td>
+                                <td>
+                                    {{item.start_date | date:'Y-m-d'}} 
+                                    ~ 
+                                    {{item.finish_date | date:'Y-m-d'}} 
+                                </td>
+                                <td>
+                                    {{item.period}}일
+                                </td>
+                                <td>
+                                    {{item.capacity}}명
+                                </td>
+                                <td>
+                                    {{item.apply_start | date:'Y-m-d'}} 
+                                    ~ 
+                                    {{item.deadline | date:'Y-m-d'}} 
+                                </td>
+                                <td>
+                                    {% if item.apply_start <= today_date and item.deadline >= today_date%}
+                                    <a href="{% url 'reservations:applyForm' item.id %}" class="bt2 on">신청하기</a>
+                                    {% elif item.apply_start > today_date %}
+                                    신청대기
+                                    {% elif item.deadline < today_date%}
+                                    신청마감
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
             {% comment %}
             <div class="bt-wrap">
                 <a href="#" onclick="javascript:alert('선택된 항목이 없습니다.');" class="bt1">신청 취소</a>
             </div>
             {% endcomment %}
-            <p class="text-center">
-                <h5>
-                    {% if page_obj.has_previous %}
-                        <!--
-                        <a href="?page={{page_obj.previous_page_number}}">Prev</a>
-                        -->
-                        <a href="javascript:void(0);" onclick="javascript:page('{{page_obj.previous_page_number}}')">Prev</a>
-                    {% endif %}
+            <div class="page-wrap">
+                {% if page_obj.has_previous %}
+                    <!--
+                    <a href="?page={{page_obj.previous_page_number}}">Prev</a>
+                    -->
+                    <a href="javascript:void(0);" onclick="javascript:page('{{page_obj.previous_page_number}}')" class="page-bt prev"><img src="/static/reservations/img/page-prev.png" alt="이전"></a>
+                {% endif %}
 
-                    {% for index in pagelist %}
-                        {% if index == page_obj.number %}
-                            <li class="page-item active">
-                                <span class="page-link">{{index}}</span>
-                            </li>
-                        {% else %}
-                            <li class="page-item">
-                                <a class="page-link" href="javascript:void(0);" onclick="javascript:page('{{index}}')">{{index}}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if page_obj.has_next %}
-                        <a href="?page={{page_obj.next_page_number}}">Next</a>
+                {% for index in pagelist %}
+                    {% if index == page_obj.number %}
+                        <li class="page-item active">
+                            <span class="page-link">{{index}}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0);" onclick="javascript:page('{{index}}')">{{index}}</a>
+                        </li>
                     {% endif %}
-                </h5>
-            </p>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{page_obj.next_page_number}}" class="page-bt next"><img src="/static/reservations/img/page-next.png" alt="다음"></a>
+                {% endif %}
+            </div>
         </div>
     </div>    
 {% endblock %}
