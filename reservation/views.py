@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
 from .models import Board, User, Event, Grades, Application, Program
-from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm, ProgramForm, ApplicationUpdateForm, ApplicationCancelForm
+from .forms import BoardForm, SignUpForm, PrettyAuthenticationForm, EventForm, ApplyForm, ProgramForm, ApplicationUpdateForm, ApplicationCancelForm, EventUpdateForm
 
 from django.views.generic import View, CreateView, FormView, DetailView, ListView, UpdateView
 
@@ -217,10 +217,12 @@ class EventDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         event = get_object_or_404(Event, pk=self.kwargs['pk'])
-        grades = Grades.objects.order_by("id")
-        context['grades'] = grades
+        #grades = Grades.objects.order_by("id")
+        #context['grades'] = grades
         context['event'] = event
-        
+        applications = Application.objects.filter(event = event)
+        context['applications'] = applications
+        print(applications)
         return context
     
 class EventManageView(LoginRequiredMixin, ListView):
@@ -270,7 +272,7 @@ def eventDelete(request, pk):
 class EventUpdateView(LoginRequiredMixin, UpdateView):
     model = Event
     context_object_name = 'event'
-    form_class = EventForm
+    form_class = EventUpdateForm
     template_name = 'event/event_update.html'
     login_url = reverse_lazy('reservations:login')
     def get_success_url(self):
@@ -311,14 +313,21 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
         
         return self.render_to_response(context)
     
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        print(f"get_form_kwargs:{kwargs}")
+        # kwargs['request'] = self.request
+        return kwargs
+    
     def post(self, request, *args, **kwargs):
         if not self.request.user.is_staff :
             # Only staff users are allowed to perform the POST operation
             return HttpResponseForbidden("로그인을 해 주세요.")
         response_data = {}
-        eventForm = EventForm(request.POST)
+        eventForm = self.get_form()
         #print("EventUpdateView POST")
-        print(list(request.POST.items()))
+        #print(list(request.POST.items()))
+        
         if eventForm.is_valid():
             
             #print("EventUpdateView validated")

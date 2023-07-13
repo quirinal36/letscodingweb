@@ -17,12 +17,6 @@
         </div>
         <div class="layout-center">
             <form>
-                <!--
-                <div class="search-box">
-                    {{form.phone_number}}
-                    <input type="button" value="검색" onclick="javascript:searchList(this);">
-                </div>
-                -->
                 <div class="title-box mt-0">
                     <strong>교육 정보</strong>
                 </div>
@@ -37,21 +31,21 @@
                         <tbody>
                             <tr>
                                 <th>교육명</th>
-                                <td>공유학교(숙박형)</td>
+                                <td>{{event.program.title}}</td>
                                 <th>교육기간</th>
-                                <td>2023-07-26 ~ 2023-07-28</td>
+                                <td>{{event.start_date}} ~ {{event.finish_date}}</td>
                             </tr>
                             <tr>
                                 <th>운영일수</th>
-                                <td>3일</td>
+                                <td>{{event.period}} 일</td>
                                 <th>모집인원</th>
-                                <td>15명</td>
+                                <td>{{event.capacity}} 명</td>
                             </tr>
                             <tr>
                                 <th>접수기간</th>
-                                <td>2023-07-03 ~ 2023-07-07</td>
+                                <td>{{event.apply_start | date:"Y년 m월 d일"}} ~ {{event.deadline | date:"Y년 m월 d일"}}</td>
                                 <th>접수인원</th>
-                                <td>24명</td>
+                                <td></td>
                             </tr>
                         <tbody>
                     </table>
@@ -71,30 +65,25 @@
                                     <th>신청인원</th>
                                     <th>전화번호</th>
                                     <th>확정 유/무</th>
-                                    <th>수정</th>
-                                    <th>취소</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                
+                                {% for application in applications %}
                                 <tr>
-                                    <td>2023년 7월 11일 12:41 오후</td>
-                                    <td>용인초등학교</td>
-                                    <td>4학년</td>
-                                    <td>4</td>
-                                    <td>10명</td>
-                                    <td>010-1234-5678</td>
+                                    <td>{{application.create_date}}</td>
+                                    <td>{{application.school}}</td>
                                     <td>
-                                        미확정<br>
-                                        <a href="#" class="bt2 mt-5">확정처리</a>
+                                        {{application.grade.tgrade}}
                                     </td>
-                                    <td><a href="#" class="bt2">수정</a></td>
-                                    <td><a href="#" class="bt2">취소</a></td>
-                                </tr>
-                                {% for application in apply_list %}
-                                <tr>
-                                    <td>{{application.students}}명</td>
                                     <td>
-                                        {{application.create_date}}
+                                        {{application.students}}
+                                    </td>
+                                    <td>
+                                        {{application.numOfClasses}}
+                                    </td>
+                                    <td>
+                                        {{application.phone_number}}
                                     </td>
                                     <td>
                                         {% if application.confirmed %}
@@ -112,16 +101,7 @@
                                             </a>
                                         </p>
                                     </td>
-                                    <td>
-                                        <a href="{% url 'reservations:applicationUpdate' application.id%}" class="bt2">수정</a>
-                                    </td>
-                                    <td>
-                                        {% if application.canceled %}
-                                            취소완료
-                                        {% else %}
-                                            <a href="{% url 'reservations:applicationCancel' application.id%}" class="bt2">취소</a>
-                                        {% endif %}
-                                    </td>
+                                    
                                 </tr>
                                 {% endfor %}
                             </tbody>

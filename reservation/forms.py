@@ -127,66 +127,25 @@ class SignUpForm(UserCreationForm):
         
         user.save() # 이제 저장해줄께요:)   
         return user 
-    
 class EventForm(forms.ModelForm):
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     #stay = forms.ChoiceField(choices = Event.STAY_CHOICES)
     #section = forms.CharField()
-    start_date = forms.DateField(
-        label = '시작날짜',
-        widget=forms.DateInput(
-            format='%Y-%m-%d', 
-            attrs={'class':'datetimepicker-input ipt1'}
-        ), 
-        input_formats = '%Y-%m-%d',
-        )
-    finish_date = forms.DateField(
-        label = '종료날짜 ',
-        widget=forms.DateInput(
-            format='%Y-%m-%d', 
-            attrs={'class':'datetimepicker-input ipt1'}
-        ), 
-        input_formats = '%Y-%m-%d',
-        )
-    apply_start = forms.DateField(
-        label = '접수시작',
-        widget=forms.DateInput(
-            format='%Y-%m-%d', 
-            attrs={'class':'datetimepicker-input ipt1'}
-        ), 
-        input_formats = '%Y-%m-%d',
-        )
-    deadline = forms.DateField(
-        label = '접수마감',
-        widget=forms.DateInput(
-            format='%Y-%m-%d', 
-            attrs={'class':'datetimepicker-input ipt1'}
-        ), 
-        input_formats = '%Y-%m-%d',
-        )
     
     class Meta:
         model = Event
         fields = ('start_date', 'finish_date', 'apply_start', 'deadline', 'capacity')
-    def is_valid(self):
-        valid = super(EventForm, self).is_valid()
-        
-        start_date = self.cleaned_data.get("start_date")
-        finish_date = self.cleaned_data.get("finish_date")
-        apply_start = self.cleaned_data.get("apply_start")
-        deadline = self.cleaned_data.get("deadline")
-        print(f"start_date:{start_date}, finish_date:{finish_date}, apply_start:{apply_start}, deadline:{deadline}")
-        
-        return True    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        print(f"init")
         """
         class_update_fields = ['title']
         for field_name in class_update_fields:
             self.fields[field_name].widget.attrs.update({
                 'class': 'ipt1'
             })
-        
+        """
         self.fields['start_date'].widget.attrs.update({
             'class': 'datetimepicker-input ipt1',
             'autocomplete' : 'off',
@@ -202,17 +161,84 @@ class EventForm(forms.ModelForm):
             'autocomplete' : 'off',
             'placeholder' : '접수 마감일'
         })
-        
         self.fields['apply_start'].widget.attrs.update({
             'class': 'datetimepicker-input ipt1',
             'autocomplete' : 'off',
             'placeholder' : '접수 시작일'
         })
-        """
         self.fields['capacity'].widget.attrs.update({
             'class': 'ipt1',
             'autocomplete' : 'off',
             'placeholder' : '모집 인원을 입력하세요.'
+        })
+        
+class EventUpdateForm(forms.ModelForm):
+    #user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    #stay = forms.ChoiceField(choices = Event.STAY_CHOICES)
+    #section = forms.CharField()
+    start_date = forms.DateField(
+        label = '시작날짜',
+        widget=forms.DateInput(
+            format='%Y-%m-%d', 
+            attrs={'class':'datetimepicker-input ipt1'}
+        ), 
+        
+        )
+    finish_date = forms.DateField(
+        label = '종료날짜 ',
+        widget=forms.DateInput(
+            format='%Y-%m-%d', 
+            attrs={'class':'datetimepicker-input ipt1'}
+        ), 
+        
+        )
+    apply_start = forms.DateField(
+        label = '접수시작',
+        widget=forms.DateInput(
+            format='%Y-%m-%d', 
+            attrs={'class':'datetimepicker-input ipt1'}
+        ), 
+        
+        )
+    deadline = forms.DateField(
+        label = '접수마감',
+        widget=forms.DateInput(
+            format='%Y-%m-%d', 
+            attrs={'class':'datetimepicker-input ipt1'}
+        ), 
+       
+        )
+    capacity = forms.IntegerField(
+        label = '모집인원',
+        
+    )
+    class Meta:
+        model = Event
+        fields = ('start_date', 'finish_date', 'apply_start', 'deadline', 'capacity')
+    def clean(self):
+        clean_data = super(EventForm, self).clean()
+        print(f"clean_data:{clean_data}")
+        
+        
+    def is_valid(self):
+        valid = super(EventForm, self).is_valid()
+        
+        start_date = self.cleaned_data.get("start_date")
+        finish_date = self.cleaned_data.get("finish_date")
+        apply_start = self.cleaned_data.get("apply_start")
+        deadline = self.cleaned_data.get("deadline")
+        
+        print(f"start_date:{start_date}, finish_date:{finish_date}, apply_start:{apply_start}, deadline:{deadline}")
+        
+        return valid
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.fields['capacity'].widget.attrs.update({
+            'class': 'ipt1',
+            'autocomplete' : 'off',
+            'placeholder' : '모집 인원 입력'
         })
         
         

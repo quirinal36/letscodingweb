@@ -53,26 +53,18 @@
                             </select>
                         </li>
                         {% for field in form %}
-                            {% if field.html_name == 'start_date' or field.html_name == 'finish_date' or field.html_name == 'apply_start' or field.html_name == 'deadline'%}
+                            
                             <li>
                                 {{field.label}}
                                 {{field }}
                                 {{field.errors}}    
                             </li>
-                            {% elif field.html_name == 'user'%}
-                                <input type="hidden" name="user" value="{{user.id}}"/>
-                            {% else %}
-                            <li>
-                                {{field.label}}
-                                {{field}}
-                                {{field.errors}}
-                            </li>
-                            {% endif %}
+                            
                         {% endfor%}
                     </ul>
                 </div>
                 <div class="bt-wrap">
-                    <input type="hidden" value="{{event.id}}" name="event_id"/>
+                    <input type="hidden" value="{{event.id}}" name="id"/>
                     <input type="submit" value="교육 수정" class="bt1 on">
                     <a href="#" onClick="history.back()" class="bt1">이전 페이지로 이동</a>
                 </div>
