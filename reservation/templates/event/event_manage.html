@@ -56,7 +56,7 @@
                                     {{item.deadline | date:'Y-m-d'}} 
                                 </td>
                                 <td>
-                                    {% if item.user == request.user %}
+                                    
                                     <a href="{% url 'reservations:eventUpdate' item.id %}" class="bt2">
                                         수정
                                     </a>
@@ -65,7 +65,7 @@
                                     <a class="event-delete bt2" onclick="javascript:deleteEvent({{item.id}})" href="javascript:void(0);">
                                         삭제
                                     </a>
-                                    {% endif %}
+                                    
                                 </td>
                             </tr>
                             {% endfor %}

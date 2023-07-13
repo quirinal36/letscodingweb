@@ -1,17 +1,27 @@
 {% extends 'base.html' %}
 {% block extrahead %}
 <script type="text/javascript">
-    
-    $("submit").on("click", function() {
+    function update(){
         if (confirm('입력하신 정보대로 수정하시겠습니까?') == true){
-            document.getElementById("updateForm").submit()
+            $.ajax({
+                type:"POST", //post data
+                data: $("#updateForm").serialize(), //if you want to send any data to view 
+                url : $("#updateForm").attr("action"), // your url that u write in action in form tag
+                dataType:"json",
+                success: function(r){
+                    if(r.result == 'success'){    
+                        parent.location.reload(true);
+                    }else{
+                        console.log(r.message);
+                    }
+                }
+            });            
         } else {
             return false;
-        }
-    });
-    
-    $(function () {
-        
+        }        
+    }
+
+    $(function () {        
         $(".datetimepicker-input").datepicker({ 
             lang: "ko",
             dateFormat: "yy-mm-dd" ,
@@ -48,24 +58,28 @@
                             <label for="programs">교육명</label>
                             <select name="program" id="programs" class="select1 w100">
                                 {% for program in programs %}
+                                    {% if program == event.program %}
+                                    <option value="{{program.id}}" selected>{{program.title}}</option>
+                                    {% else %}
                                     <option value="{{program.id}}">{{program.title}}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </li>
                         {% for field in form %}
-                            
+                            {% if not field == program %}
                             <li>
                                 {{field.label}}
                                 {{field }}
                                 {{field.errors}}    
                             </li>
-                            
+                            {% endif %}
                         {% endfor%}
                     </ul>
                 </div>
                 <div class="bt-wrap">
                     <input type="hidden" value="{{event.id}}" name="id"/>
-                    <input type="submit" value="교육 수정" class="bt1 on">
+                    <input type="submit" value="교육 수정" class="bt1 on" onclick="javascript:update()">
                     <a href="#" onClick="history.back()" class="bt1">이전 페이지로 이동</a>
                 </div>
             </form>

@@ -192,7 +192,7 @@ class EventUpdateForm(forms.ModelForm):
         ), 
         
         )
-    apply_start = forms.DateField(
+    apply_start = forms.DateTimeField(
         label = '접수시작',
         widget=forms.DateInput(
             format='%Y-%m-%d', 
@@ -200,7 +200,7 @@ class EventUpdateForm(forms.ModelForm):
         ), 
         
         )
-    deadline = forms.DateField(
+    deadline = forms.DateTimeField(
         label = '접수마감',
         widget=forms.DateInput(
             format='%Y-%m-%d', 
@@ -214,14 +214,15 @@ class EventUpdateForm(forms.ModelForm):
     )
     class Meta:
         model = Event
-        fields = ('start_date', 'finish_date', 'apply_start', 'deadline', 'capacity')
-    def clean(self):
-        clean_data = super(EventForm, self).clean()
-        print(f"clean_data:{clean_data}")
+        fields = ('id', 'start_date', 'finish_date', 'apply_start', 'deadline', 'capacity', 'program')
         
+    def clean(self):
+        clean_data = super(EventUpdateForm, self).clean()
+        #print(f"clean_data:{clean_data}")        
+        return clean_data
         
     def is_valid(self):
-        valid = super(EventForm, self).is_valid()
+        valid = super(EventUpdateForm, self).is_valid()
         
         start_date = self.cleaned_data.get("start_date")
         finish_date = self.cleaned_data.get("finish_date")

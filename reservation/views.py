@@ -315,7 +315,7 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        print(f"get_form_kwargs:{kwargs}")
+        #print(f"get_form_kwargs:{kwargs}")
         # kwargs['request'] = self.request
         return kwargs
     
@@ -326,23 +326,32 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
         response_data = {}
         eventForm = self.get_form()
         #print("EventUpdateView POST")
-        #print(list(request.POST.items()))
+        print(list(request.POST.items()))
         
         if eventForm.is_valid():
             
             #print("EventUpdateView validated")
-            event = eventForm.save(commit=False)
+            event = self.get_object()
             #print("after eventform save")
-            #print(event.user)
-            event.user = request.user
-            #event.save() <<-- 얘가 있으면 수정도 되면서 복제본이 추가됨
-            #print(event.user)
+            print(f"event:{event}")
+            event.capacity = request.POST['capacity']
+            #event.program = eventForm.clean_data.get('program')
+            event.start_date = eventForm.cleaned_data.get('start_date')
+            event.finish_date = eventForm.cleaned_data.get('finish_date')
+            event.apply_start = eventForm.cleaned_data.get('apply_start')
+            event.deadline = eventForm.cleaned_data.get('deadline')
+            #event.user = request.user
+            #event.save() # <<-- 얘가 있으면 수정도 되면서 복제본이 추가됨
+            #event.id = request.POST['id']
+            #print(f"event:{event}")
+            #Event.objects.filter(pk=event.id).update()
+            #event.save()
             
-            response_data['result'] = 'success'
-        else :
-            response_data['result'] = 'fail'
-        return HttpResponse(json.dumps(response_data), content_type="application/json")    
-        #return super().post(request, *args, **kwargs)
+            #response_data['result'] = 'success'
+        #else :
+            #response_data['result'] = 'fail'
+        #return HttpResponse(json.dumps(response_data), content_type="application/json")    
+        return super().post(request, *args, **kwargs)
             
     
 @staff_member_required

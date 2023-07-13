@@ -133,8 +133,14 @@ class Event(models.Model):
         return[(field.verbose_name, field.value_from_object(self)) for field in self.__class__._meta.fields]
     
     def save(self,*args, **kwargs):
-        self.apply_start = self.apply_start.replace(hour=0, minute=0, second=0, microsecond=0)
-        self.deadline = self.deadline.replace(hour=23, minute=59, second=59)
+        try:
+            self.apply_start = self.apply_start.replace(hour=0, minute=0, second=0)
+        except Exception as e:
+            print("apply_start replace except: ", e)
+        try :
+            self.deadline = self.deadline.replace(hour=23, minute=59, second=59)
+        except Exception as e:
+            print("deadline replace except: ", e)
         
         self.period = 0        
         
@@ -191,7 +197,7 @@ class Event(models.Model):
         return list(result)
         
     def __str__(self):
-         return f"(title:{self.title}, program:{self.program})"
+         return f"program_title:{self.program.title}), start_date:{self.start_date}, finish_date:{self.finish_date}, apply_start:{self.apply_start}, deadline:{self.deadline}, capacity:{self.capacity}"
      
 class Grades(models.Model):
     grade = models.PositiveIntegerField(default = 0)
