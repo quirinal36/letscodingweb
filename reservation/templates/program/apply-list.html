@@ -58,15 +58,6 @@
                                         {% else %}
                                             미확정
                                         {% endif %}
-                                        <p>
-                                            <a href="{% url 'reservations:applicationConfirm' application.id %}" class="bt2 mt-5">
-                                                {% if user.is_authenticated and application.confirmed == False%}
-                                                    확정처리
-                                                {% elif user.is_authenticated %}
-                                                    확정취소
-                                                {% endif %}
-                                            </a>
-                                        </p>
                                     </td>
 
                                     <td>
