@@ -82,7 +82,9 @@
                 </div>
             </form>
             <div class="page-wrap">
+                {% comment %}
                 <a href="javascript:void(0);" onclick="javascript:page('1')" class="page-bt prev"><img src="/static/reservations/img/page-prev.png" alt="처음"></a>
+                {% endcomment %}
                 {% if page_obj.has_previous %}
                     <a href="javascript:void(0);" onclick="javascript:page('{{page_obj.previous_page_number}}')" class="page-bt prev"><img src="/static/reservations/img/page-prev.png" alt="이전"></a>
                 {% endif %}
@@ -102,7 +104,9 @@
                 {% if page_obj.has_next %}
                     <a href="?page={{page_obj.next_page_number}}" class="page-bt next"><img src="/static/reservations/img/page-next.png" alt="다음"></a>
                 {% endif %}
+                {% comment %}
                 <a href="javascript:void(0);" onclick="javascript:page('{{num_pages}}')" class="page-bt next"><img src="/static/reservations/img/page-next.png" alt="마지막"></a>
+                {% endcomment %}
             </div>
         </div>
     </div>    

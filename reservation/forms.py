@@ -214,7 +214,7 @@ class EventUpdateForm(forms.ModelForm):
     )
     class Meta:
         model = Event
-        fields = ('id', 'start_date', 'finish_date', 'apply_start', 'deadline', 'capacity', 'program')
+        fields = ('id', 'start_date', 'finish_date', 'apply_start', 'deadline', 'capacity')
         
     def clean(self):
         clean_data = super(EventUpdateForm, self).clean()
@@ -398,8 +398,9 @@ class ApplicationCancelForm(forms.ModelForm):
                 })
     
     def clean(self, *args, **kwargs):
-        print("clean-1")
-        print(F"clean kwargs:{kwargs}")
+        #print("clean-1")
+        #print(F"clean kwargs:{kwargs}")
+        """
         if "pk" in kwargs:
             print(f"clean-2 pk:{kwargs['pk']}")
             application = Application.objects.get(pk = kwargs["pk"])
@@ -413,6 +414,7 @@ class ApplicationCancelForm(forms.ModelForm):
                 return False
             else:
                 return True
+        """
             
     password = forms.CharField(
         label = '비밀번호',

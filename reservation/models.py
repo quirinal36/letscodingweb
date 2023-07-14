@@ -218,5 +218,5 @@ class Application(models.Model):
     canceled = models.BooleanField(default = False)
     
     def __str__(self):
-        return f"id:{self.id}, phone_number:{self.phone_number}, event_id:{self.event.id}, event:{self.event}"
+        return f"id:{self.id}, phone_number:{self.phone_number}, event_id:{self.event.id}, event:{self.event}, canceled:{self.canceled}"
     

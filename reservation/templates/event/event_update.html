@@ -55,6 +55,7 @@
                 <div class="box">
                     <ul>
                         <li>
+                            {% comment %}
                             <label for="programs">교육명</label>
                             <select name="program" id="programs" class="select1 w100">
                                 {% for program in programs %}
@@ -65,6 +66,8 @@
                                     {% endif %}
                                 {% endfor %}
                             </select>
+                            {% endcomment %}
+                            {{ event.program.title}}
                         </li>
                         {% for field in form %}
                             {% if not field == program %}

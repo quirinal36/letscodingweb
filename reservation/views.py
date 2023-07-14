@@ -438,7 +438,7 @@ class EventListView(ListView):
                     |
                     (Q(finish_date__lt=lastDayOfMonth)&Q(finish_date__gte=selected_date))
                 )
-            )
+            ).order_by("-id")
             #print(str(queryset.query))
             return queryset
         else:
@@ -452,7 +452,7 @@ class EventListView(ListView):
                 & 
                     (Q(apply_start__lt=now) & Q(deadline__gt=now+ timedelta(days=1))
                 )
-            )
+            ).order_by("-id")
             #print(str(queryset.query))
             return queryset        
     
@@ -505,7 +505,7 @@ class ApplyListView(ListView):
             phone_param = request.GET["phone_number"]
             phone_param = self.format_phone_number(phone_param)
             # print(f"phone_param:{phone_param}")
-            self.object_list = Application.objects.filter(phone_number__icontains = phone_param)
+            self.object_list = Application.objects.filter(phone_number__icontains = phone_param).order_by("-id")
         
         context = self.get_context_data()
         return self.render_to_response(context)
@@ -695,6 +695,7 @@ class ApplicationCancelView(UpdateView):
     model = Application
     form_class = ApplicationCancelForm
     template_name = "program/cancel.html"
+    success_url = reverse_lazy("reservations:applyList")
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -722,16 +723,17 @@ class ApplicationCancelView(UpdateView):
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         originApplication = Application.objects.get(pk=self.kwargs['pk'])
-        print(F"post kwargs:{kwargs}")
+        print(f"originApplication:{originApplication}")
         if form.is_valid() :
             password = form.cleaned_data.get('password')
             if password == originApplication.password:
-                #messages.success(request, '수정이 완료되었습니다.')
                 
+                originApplication.canceled = True
+                
+                # messages.success(request, '취소가 완료되었습니다.')
                 return super().post(request, *args, **kwargs)
             else:
-                messages.error(self.request, '비밀번호가 틀렸습니다. 다시 입력해 주세요.', extra_tags='danger')
-        
+                messages.error(self.request, '비밀번호가 틀렸습니다. 다시 입력해 주세요.', extra_tags='danger')        
             context = {
                     'form': form, 
                     }
