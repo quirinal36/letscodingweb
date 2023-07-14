@@ -3,9 +3,6 @@
     {% load static %}
     <script src="{% static 'reservations/js/apply.js' %}"></script>
     <link rel="stylesheet" href="{%static 'reservations/css/paging.css'%}"/>
-    <style>
-        
-    </style>
 {% endblock %}
 {% block content %}
     
@@ -92,13 +89,15 @@
                                             미확정
                                         {% endif %}
                                         <p>
-                                            <a href="{% url 'reservations:applicationConfirm' application.id %}" class="bt2">
-                                                {% if user.is_authenticated and application.confirmed == False%}
-                                                    확정처리
-                                                {% elif user.is_authenticated %}
-                                                    확정취소
-                                                {% endif %}
+                                            {% if user.is_authenticated and application.confirmed == False%}
+                                            <a href="#" onclick="javascript:confirmApplication('확정처리', '{{application.id}}')" class="bt2">
+                                                확정처리
                                             </a>
+                                            {% elif user.is_authenticated %}
+                                            <a href="#" onclick="javascript:confirmApplication('확정취소', '{{application.id}}')" class="bt2">
+                                                확정취소
+                                            </a>        
+                                            {% endif %}                                            
                                         </p>
                                     </td>
                                     

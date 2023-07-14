@@ -628,7 +628,7 @@ def applicationConfirm(request, pk):
         application.confirmed = 0
     else :
         application.confirmed = 1
-    #print(f"application.save():{application.save()}")
+    application.save()
     response_data['result'] = 'success'
     
     return HttpResponse(json.dumps(response_data), content_type="application/json")
@@ -722,14 +722,15 @@ class ApplicationCancelView(UpdateView):
     
     def post(self, request, *args, **kwargs):
         form = self.get_form()
-        originApplication = Application.objects.get(pk=self.kwargs['pk'])
+        #originApplication = Application.objects.get(pk=self.kwargs['pk'])
+        originApplication = get_object_or_404(Application, pk=self.kwargs['pk'])
         print(f"originApplication:{originApplication}")
         if form.is_valid() :
             password = form.cleaned_data.get('password')
             if password == originApplication.password:
                 
-                originApplication.canceled = True
-                
+                originApplication.canceled = 1
+                originApplication.save()
                 # messages.success(request, '취소가 완료되었습니다.')
                 return super().post(request, *args, **kwargs)
             else:
